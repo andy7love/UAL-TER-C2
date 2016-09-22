@@ -22,6 +22,7 @@ Unmanned Aircraft Life - Terminal C2
 #### On-demand information
 + Modules initialization
 + Modules status
++ Entire snapshot status
 + Debug mode
 + Logs
 
@@ -33,7 +34,6 @@ Unmanned Aircraft Life - Terminal C2
 
 #### Complete Manual Flight
 + Basic direct-Joystick commands such as x,y,z and thottle values directly translated to engines.
-+ Basic camera/lights on/off commands
 
 #### Assisted Manual Flight
 + Advanced flight attitudes such as heading, roll, pitch and altitude values.
