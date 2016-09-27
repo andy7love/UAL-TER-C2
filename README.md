@@ -3,6 +3,10 @@ Unmanned Aircraft Life - Terminal C2
 
 ## Objetives 
 
+### Initialization modes
+#### Normal
+#### Simulation (mocks all sensors and engines).
+
 ### Broadcast status
 #### Basic Sensors information
 + Camera streaming
