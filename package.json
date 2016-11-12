@@ -1,0 +1,45 @@
+{
+  "name": "ual-ter-c2",
+  "version": "1.0.0",
+  "description": "Unmanned Aircraft Life - Terminal C2",
+  "main": "build/index.js",
+  "scripts": {
+    "start": "node build/index",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/andy7love/UAL-TER-C2.git"
+  },
+  "keywords": [
+    "rc",
+    "drone",
+    "sensors",
+    "raspberry",
+    "arduino",
+    "johnny-five",
+    "webrtc"
+  ],
+  "author": "Andres Amor",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/andy7love/UAL-TER-C2/issues"
+  },
+  "homepage": "https://github.com/andy7love/UAL-TER-C2#readme",
+  "dependencies": {
+    "gulp": "^3.9.1",
+    "gulp-clean": "^0.3.2",
+    "gulp-typescript": "^3.1.2",
+    "johnny-five": "^0.10.0",
+    "node-static": "^0.7.9",
+    "socket.io": "^1.5.1",
+    "socket.io-client": "^1.5.1",
+    "typescript": "^2.0.9",
+    "wrtc": "0.0.61"
+  },
+  "optionalDependencies": {
+    "nodebots-interchange": "^1.1.2",
+    "raspi-io": "^6.1.0",
+    "ina219": "^0.6.1"
+  }
+}
