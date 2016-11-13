@@ -1,0 +1,7 @@
+{
+  "compilerOptions": {
+	"noImplicitAny": true,
+	"baseUrl": "./node_modules",
+	"module": "commonjs"
+  }
+}
