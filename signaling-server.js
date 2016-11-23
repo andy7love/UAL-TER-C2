@@ -16,6 +16,10 @@ io.sockets.on('connection', function(socket) {
     clientSocket = socket;
     console.log('client-connected');
     socket.broadcast.emit('client-connected');
+    if(droneSocket != null) {
+      // a drone is already connected, notify to new client!
+      socket.emit('drone-connected');
+    }
   });
   socket.on('drone-connect', function() {
     droneSocket = socket;
