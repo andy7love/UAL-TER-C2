@@ -22,7 +22,9 @@ declare namespace CANNON {
     export class Body {
         constructor(options: any);
         position: Vec3;
-        orientation: Quaternion;
+        quaternion: Quaternion;
+        collisionFilterGroup: any;
+        collisionFilterMask: any;
         addShape(shape: any, _offset?: any, _orientation?: any): any;
         applyForce(force: any, worldPoint: any): void;
         applyImpulse(impulse: any, worldPoint: any): void;
@@ -291,7 +293,7 @@ declare namespace CANNON {
         clone(): any;
         conjugate(target: any): any;
         copy(source: any): any;
-        inverse(target: any): any;
+        inverse(target?: any): any;
         mult(q: any, target: any): any;
         normalize(): void;
         normalizeFast(): void;

@@ -1,3 +1,6 @@
+/// <reference path="../../typings/globals/baconjs/index.d.ts" />
+let Bacon = require('baconjs');
+
 import { Utils } from "../helpers/Utils";
 import { WebRTCConnection } from "../helpers/WebRTCConnection";
 import { DroneState } from "../states/DroneState";
@@ -35,16 +38,20 @@ export class Communication {
 	}
 
 	private configureStreaming() {
-		this.state.simulation.position.getStream()
-			.zip(this.state.simulation.orientation.getStream().toEventStream(), (position: any, orientation: any) => {
-				return {
-					position: position,
-					orientation: orientation
+		Bacon.when([
+					this.state.simulation.position.getStream(),
+					this.state.simulation.orientation.getStream().changes()
+				],
+				(position: any, orientation: any) => {
+					return {
+						position: position,
+						orientation: orientation
+					}
 				}
-			})
+			)
 			.skipDuplicates()
 			.skipWhile(this.state.communication.connected.getStream().map(Utils.negate))
-			.onValue((state) => {
+			.onValue((state:any) => {
 				this.connection.sendDataUsingFastChannel({
 					simulation: {
 						position: state.position,
