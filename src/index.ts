@@ -1,8 +1,12 @@
 /// <reference path="../typings/globals/node/index.d.ts" />
+import { DroneState } from './states/DroneState';
+import { Communication } from './modules/Communication';
+import { FlightControl } from './modules/FlightControl';
 
-import { System } from './modules/test';
-let s = require('socket.io');
+/*
 let d = require('johnny-five');
-let myClass = new System.MyTest();
-myClass.log();
-console.log(s);
+*/
+
+let state = new DroneState();
+let communication = new Communication(state);
+let flightControl = new FlightControl(state);

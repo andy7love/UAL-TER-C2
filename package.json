@@ -27,6 +27,8 @@
   },
   "homepage": "https://github.com/andy7love/UAL-TER-C2#readme",
   "dependencies": {
+    "baconjs": "^0.7.89",
+    "cannon": "^0.6.2",
     "gulp": "^3.9.1",
     "gulp-clean": "^0.3.2",
     "gulp-typescript": "^3.1.2",
