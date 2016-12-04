@@ -16,12 +16,21 @@ export class FlightControl {
 			.getStream()
 			.changes()
 			.onValue((flightState) => {
+				let enginesState = {
+					throttle: flightState.throttle
+				};
+				/*
 				position.y += 0.1 * flightState.throttle;
 				orientation.x += 0.1 * (flightState.roll)*-1;
 				orientation.y += 0.1 * flightState.yaw;
 				orientation.z += 0.1 * flightState.pitch;
-				this.state.simulation.position.setValue(position);
-				this.state.simulation.orientation.setValue(orientation);
+				*/
+				this.state.engines.setValue({
+					flEngine: enginesState,
+					frEngine: enginesState,
+					rlEngine: enginesState,
+					rrEngine: enginesState
+				});
 			});
 	}
 }

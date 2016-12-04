@@ -21,7 +21,9 @@ declare namespace CANNON {
     }
     export class Body {
         constructor(options: any);
-        addShape(shape: any, _offset: any, _orientation: any): any;
+        position: Vec3;
+        orientation: Quaternion;
+        addShape(shape: any, _offset?: any, _orientation?: any): any;
         applyForce(force: any, worldPoint: any): void;
         applyImpulse(impulse: any, worldPoint: any): void;
         applyLocalForce(localForce: any, localPoint: any): void;
@@ -502,6 +504,8 @@ declare namespace CANNON {
     }
     export class World {
         constructor();
+        gravity: any;
+        solver: any;
         add(body: any): void;
         addBody(body: any): void;
         addConstraint(c: any): void;
