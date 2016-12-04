@@ -1,3 +1,4 @@
+import { Utils } from "../helpers/Utils";
 import { WebRTCConnection } from "../helpers/WebRTCConnection";
 import { DroneState } from "../states/DroneState";
 
@@ -19,19 +20,14 @@ export class Communication {
 				},
 				disconnected: () => {
 					console.log('disconnected!');
+					this.state.communication.connected.setValue(false);
 				},
 				messageReceived: (message) => {
-					if(typeof message === 'string') {
-						console.log('Message from client: ', message);
-					} else {
-						this.handleMessageReceived(message);
-					}
+					this.handleMessageReceived(message);
 				},
 				readyToSend: (ready:boolean) => {
 					console.log('ready to send', ready);
-					if(ready === true) {
-						this.connection.sendDataUsingReliableChannel('hey im drone!');
-					}
+					this.state.communication.connected.setValue(ready);
 				}
 			}
 		});
@@ -47,20 +43,12 @@ export class Communication {
 				}
 			})
 			.skipDuplicates()
-			.skipWhile(this.state.communication.connected.getStream())
+			.skipWhile(this.state.communication.connected.getStream().map(Utils.negate))
 			.onValue((state) => {
 				this.connection.sendDataUsingFastChannel({
 					simulation: {
-						position: {
-							x: state.position.x,
-							y: state.position.y,
-							z: state.position.z
-						},
-						orientation: {
-							x: state.orientation.x,
-							y: state.orientation.y,
-							z: state.orientation.z
-						}
+						position: state.position,
+						orientation: state.orientation
 					}
 				});
 			});
