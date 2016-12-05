@@ -20,16 +20,16 @@ export class FlightControl {
 
 				this.state.engines.setValue({
 					flEngine: {
-						throttle: (flightState.pitch + flightState.roll) * steeringFactor + flightState.throttle   
+						throttle: (flightState.pitch + flightState.roll - flightState.yaw) * steeringFactor + flightState.throttle   
 					},
 					frEngine: {
-						throttle: (flightState.pitch - flightState.roll) * steeringFactor + flightState.throttle
+						throttle: (flightState.pitch - flightState.roll + flightState.yaw) * steeringFactor + flightState.throttle
 					},
 					rlEngine: {
-						throttle: (-flightState.pitch + flightState.roll) * steeringFactor + flightState.throttle
+						throttle: (-flightState.pitch + flightState.roll + flightState.yaw) * steeringFactor + flightState.throttle
 					},
 					rrEngine: {
-						throttle: (-flightState.pitch - flightState.roll) * steeringFactor + flightState.throttle
+						throttle: (-flightState.pitch - flightState.roll - flightState.yaw) * steeringFactor + flightState.throttle
 					}
 				});
 			});
