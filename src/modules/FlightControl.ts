@@ -16,7 +16,7 @@ export class FlightControl {
 			.getStream()
 			.changes()
 			.onValue((flightState) => {
-				let steeringFactor = 0.05;
+				let steeringFactor = 0.03;
 
 				this.state.engines.setValue({
 					flEngine: {

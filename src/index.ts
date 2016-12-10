@@ -1,4 +1,3 @@
-/// <reference path="../typings/globals/node/index.d.ts" />
 import { DroneState } from './states/DroneState';
 import { Communication } from './modules/Communication';
 import { FlightControl } from './modules/FlightControl';

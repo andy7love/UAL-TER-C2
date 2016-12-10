@@ -90,7 +90,18 @@ export class Simulation {
         this.lastTime = time;
 
         this.world.step(this.fixedTimeStep, dt, this.maxSubSteps);
-        console.log(this.drone.position);
+
+                let enginesState = this.state.engines.getValue();
+
+                let localPoint: CANNON.Vec3 = new CANNON.Vec3(0,0,0);
+                let airPressureFactor = this.drone.position.y * -0.01 + 1;
+                let forceFactor = 55 * airPressureFactor;
+                let torqueFactor = forceFactor;
+
+                this.engines[0].applyLocalForce(new CANNON.Vec3(-enginesState.rlEngine.throttle*torqueFactor, enginesState.rlEngine.throttle*forceFactor, 0), localPoint);
+                this.engines[1].applyLocalForce(new CANNON.Vec3(enginesState.rrEngine.throttle*torqueFactor, enginesState.rrEngine.throttle*forceFactor, 0), localPoint);
+                this.engines[2].applyLocalForce(new CANNON.Vec3(enginesState.frEngine.throttle*torqueFactor, enginesState.frEngine.throttle*forceFactor, 0), localPoint);
+                this.engines[3].applyLocalForce(new CANNON.Vec3(-enginesState.flEngine.throttle*torqueFactor, enginesState.flEngine.throttle*forceFactor, 0), localPoint);
 
         this.state.simulation.position.setValue(this.drone.position);
         this.state.simulation.orientation.setValue(this.drone.quaternion);
@@ -104,16 +115,18 @@ export class Simulation {
 		this.state.engines
             .getStream()
             .changes()
-            .skipDuplicates()
             .onValue((enginesState) => {
+                /*
                 let localPoint: CANNON.Vec3 = new CANNON.Vec3(0,0,0);
-                let forceFactor = 100;
-                let torqueFactor = 100;
+                let airPressureFactor = (2 / (this.drone.position.y + 1));
+                let forceFactor = 100 * airPressureFactor;
+                let torqueFactor = 100 * airPressureFactor;
 
                 this.engines[0].applyLocalForce(new CANNON.Vec3(-enginesState.rlEngine.throttle*torqueFactor, enginesState.rlEngine.throttle*forceFactor, 0), localPoint);
                 this.engines[1].applyLocalForce(new CANNON.Vec3(enginesState.rrEngine.throttle*torqueFactor, enginesState.rrEngine.throttle*forceFactor, 0), localPoint);
                 this.engines[2].applyLocalForce(new CANNON.Vec3(enginesState.frEngine.throttle*torqueFactor, enginesState.frEngine.throttle*forceFactor, 0), localPoint);
                 this.engines[3].applyLocalForce(new CANNON.Vec3(-enginesState.flEngine.throttle*torqueFactor, enginesState.flEngine.throttle*forceFactor, 0), localPoint);
+                */
             });
 	}
 }
