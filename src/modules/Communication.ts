@@ -2,12 +2,12 @@
 let Bacon = require('baconjs');
 
 import { Utils } from "../helpers/Utils";
-import { WebRTCConnection } from "../helpers/WebRTCConnection";
+import { DirectConnection } from "../helpers/DirectConnection";
 import { DroneState } from "../states/DroneState";
 
 export class Communication {
 	private state: DroneState;
-	private connection: WebRTCConnection;
+	private connection: DirectConnection;
 
 	constructor (state: DroneState) {
 		this.state = state;
@@ -16,7 +16,7 @@ export class Communication {
 	}
 
 	private initConnection() {
-		this.connection = new WebRTCConnection({
+		this.connection = new DirectConnection({
 			events: {
 				connected: () => {
 					console.log('connected!');
@@ -25,7 +25,7 @@ export class Communication {
 					console.log('disconnected!');
 					this.state.communication.connected.setValue(false);
 				},
-				messageReceived: (message) => {
+				messageReceived: (message: any) => {
 					this.handleMessageReceived(message);
 				},
 				readyToSend: (ready:boolean) => {

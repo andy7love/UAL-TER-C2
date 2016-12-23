@@ -7,8 +7,6 @@
     "jquery": "registry:dt/jquery#1.10.0+20160929162922",
     "node": "registry:env/node#6.0.0+20161105011511",
     "socket.io-client": "registry:dt/socket.io-client#1.4.4+20160317120654",
-    "underscore": "registry:dt/underscore#1.8.3+20161123125004",
-    "webrtc/mediastream": "registry:dt/webrtc/mediastream#0.0.0+20160317120654",
-    "webrtc/rtcpeerconnection": "registry:dt/webrtc/rtcpeerconnection#0.0.0+20160719235950"
+    "underscore": "registry:dt/underscore#1.8.3+20161123125004"
   }
 }

@@ -15,10 +15,11 @@
     "rc",
     "drone",
     "sensors",
+    "robotic",
     "raspberry",
     "arduino",
     "johnny-five",
-    "webrtc"
+    "rtc"
   ],
   "author": "Andres Amor",
   "license": "ISC",
@@ -34,12 +35,10 @@
     "gulp-clean": "^0.3.2",
     "gulp-typescript": "^3.1.2",
     "johnny-five": "^0.10.0",
-    "node-static": "^0.7.9",
-    "socket.io": "^1.5.1",
+    "kalm": "^1.4.0",
     "socket.io-client": "^1.5.1",
     "typescript": "^2.0.9",
-    "underscore": "^1.8.3",
-    "wrtc": "0.0.61"
+    "underscore": "^1.8.3"
   },
   "optionalDependencies": {
     "nodebots-interchange": "^1.1.2",
