@@ -5,7 +5,7 @@ interface DirectConnectionSettings {
         connected: () => void,
         disconnected: () => void,
         readyToSend: (ready: boolean) => void,
-        messageReceived: (data: string) => void
+        messageReceived: (data: any) => void
     }
 }
 
@@ -18,6 +18,8 @@ export class DirectConnection {
     private kalm: any;
     private isPeerConnectionStarted: boolean = false;
     private settings: DirectConnectionSettings;
+    private tcpServer: any;
+    private udpServer: any;
 
     constructor(settings: DirectConnectionSettings) {
         this.settings = settings;
@@ -25,39 +27,51 @@ export class DirectConnection {
     }
 
     public connect(): void {
-        // Enable this when start using LTE-4G-3G connections. 
-        //this.socket = require('socket.io-client')(this.signalingServerURL);  
+        // Enable this when start using LTE-4G-3G connections.
+        // Can be used for NAT 
+        //this.socket = require('socket.io-client')(this.signalingServerURL);
+        //----------------------------------------------------------------------
+
         this.createReliableDataChannel(); 
         this.createFastDataChannel();
     }
 
     public disconnect() {
-        // TODO!
+        this.closeConnection();
     }
 
     private createReliableDataChannel() {
-        let server = new this.kalm.Server({
+        this.tcpServer = new this.kalm.Server({
             port: 6000,
             adapter: 'tcp',
             encoder: 'json',
             channels: {
+                clientMessage: (data:any) => {
+                    this.receiveMessage(data);
+                },
+                pang: (data:any) => {
+                    console.log(data);
+                    this.tcpServer.whisper('pung', {a: 'pong!'});
+                },
                 messageEvent: (data:any) => {
-                    console.log('TCP User sent message ' + data.body);
+                    console.log('User sent message ' + data.body);
                 }
             }
         });
 
-		server.on('ready', () => {
+		this.tcpServer.on('ready', () => {
 			console.log('TCP Server is listening on port 6000');
 		});
 
-		server.on('error', (error:any) => {
+		this.tcpServer.on('error', (error:any) => {
 			console.log('ERROR: ', error);
 		});
 
-		server.on('connect', (socket:any) => {
-			console.log('Client connected');
-            server.broadcast('userEvent', 'A new user has connected');  
+		this.tcpServer.on('connect', (socket:any) => {
+			console.log('Client connected - ', this.tcpServer.connections.length);
+            this.isPeerConnectionStarted = true;  
+            this.settings.events.connected();
+            this.handleReliableChannelStateChange();
             socket.on("error", (error:any) => {
                 if(	error.code != 'ECONNREFUSED' &&
                     error.code != 'ECONNRESET' ) {
@@ -66,46 +80,39 @@ export class DirectConnection {
             });
 		});
 
-		server.on('disconnect', (socket:any) => {
+		this.tcpServer.on('disconnect', (socket:any) => {
 			console.log('Client disconnected');
+            this.isPeerConnectionStarted = false;
+            this.settings.events.disconnected();
+            this.handleReliableChannelStateChange();
 		});
     }
 
     private createFastDataChannel() {
-        let server = new this.kalm.Server({
+        this.udpServer = new this.kalm.Server({
             port: 7000,
             adapter: 'udp',
             encoder: 'json',
             channels: {
-                messageEvent: (data:any) => {
-                    console.log('UDP User sent message ' + data.body);
+                clientMessage: (data:any) => {
+                    console.log(data);
+                    this.udpServer.whisper('test', {a: 'bye!'});
+                    this.receiveMessage(data);
                 }
             }
         });
 
-		server.on('ready', () => {
+		this.udpServer.on('ready', () => {
 			console.log('UDP Server is listening on port 7000');
 		});
 
-		server.on('error', (error:any) => {
+		this.udpServer.on('error', (error:any) => {
 			console.log('ERROR: ', error);
 		});
     }
 
-    private handleIncomingChannels(event: any) {
-        /* TODO! needed??
-        let receiveChannel: RTCDataChannel = event.channel;
-        receiveChannel.onmessage = (event) => {
-            this.receiveMessage(event);
-        };
-        */
-    }
-
-    private receiveMessage(event: any) {
-        /* TODO!
-        let data = event.data;
+    private receiveMessage(data: any) {
         this.settings.events.messageReceived(data);
-        */
     }
 
     private handleReliableChannelStateChange() {
@@ -114,46 +121,25 @@ export class DirectConnection {
     }
 
     public isReadyToSend(): boolean {
-        /* TODO! 
-        return (this.isPeerConnectionStarted && 
-            this.channels.reliable.channel.readyState === 'open');
-        */
-        return false;
+        return this.isPeerConnectionStarted;
     }
 
     public sendDataUsingReliableChannel(data: any) {
-        /*
-        TODO! 
-        if(typeof data !== 'string') {
-            data = JSON.stringify(data);
+        if(this.isPeerConnectionStarted) {
+            this.tcpServer.broadcast('droneMessage', data);  
         }
-        if(this.isReadyToSend()) {
-            this.channels.reliable.channel.send(data);
-        } else {
-            console.log('Warning! Reliable channel not ready to send data! - data lost');
-        }
-        */
     }
 
     public sendDataUsingFastChannel(data: any) {
-        /*
-        TODO!
-        if(typeof data !== 'string') {
-            data = JSON.stringify(data);
+        if(this.isPeerConnectionStarted) {
+            this.udpServer.broadcast('droneMessage', data);
         }
-        if(this.isPeerConnectionStarted && this.channels.fast.channel.readyState === 'open') {
-            this.channels.fast.channel.send(data);
-        }
-        */
     }
 
     private closeConnection() {
         this.isPeerConnectionStarted = false;
-        /*
-        TODO! 
-        this.peerConnection.close();
-        this.peerConnection = null;
-        this.settings.events.disconnected();
-        */
+        this.handleReliableChannelStateChange();
+        this.tcpServer.stop();
+        this.udpServer.stop();
     }
 }

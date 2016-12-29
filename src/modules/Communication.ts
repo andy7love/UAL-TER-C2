@@ -31,6 +31,9 @@ export class Communication {
 				readyToSend: (ready:boolean) => {
 					console.log('ready to send', ready);
 					this.state.communication.connected.setValue(ready);
+
+					this.connection.sendDataUsingFastChannel('hola');
+					this.connection.sendDataUsingFastChannel({a: 'hola'});
 				}
 			}
 		});
@@ -61,9 +64,8 @@ export class Communication {
 			});
 	}
 
-	private handleMessageReceived(message: string) {
+	private handleMessageReceived(data: any) {
 		try {
-			let data: any = JSON.parse(message);
 			if(data.joystick !== undefined) {
 				this.state.flight.setValue(data.joystick);
 			}
