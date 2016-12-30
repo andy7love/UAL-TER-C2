@@ -18,13 +18,6 @@ export class Communication {
 	private initConnection() {
 		this.connection = new DirectConnection({
 			events: {
-				connected: () => {
-					console.log('connected!');
-				},
-				disconnected: () => {
-					console.log('disconnected!');
-					this.state.communication.connected.setValue(false);
-				},
 				messageReceived: (message: any) => {
 					this.handleMessageReceived(message);
 				},
