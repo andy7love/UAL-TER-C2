@@ -17,7 +17,7 @@ export class DirectConnection {
     
     private settings: DirectConnectionSettings;
     private jsonSocket: any = null;
-    private hostname: string =  '127.0.0.1';
+    private hostname: string =  '192.168.1.200';
 
     private tcpPort: number = 6000;
     private tcpServer: net.Server = null;
