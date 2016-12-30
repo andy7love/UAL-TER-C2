@@ -22,9 +22,12 @@ export class DirectConnection {
     private tcpPort: number = 6000;
     private tcpServer: net.Server = null;
     private tcpSockets: Array<net.Socket> = [];
+    private tcpJsonSocket: any = null;
 
-    //private udpServer: dgram.Socket;
-    //private udpPort: number = 7000;
+    private udpServer: dgram.Socket;
+    private udpPort: number = 7000;
+    private udpClientAddress: string = null;
+    private udpClientPort: number = null;
 
     constructor(settings: DirectConnectionSettings) {
         this.settings = settings;
@@ -79,12 +82,9 @@ export class DirectConnection {
     }
 
     private connectToClient(socket: net.Socket) {
-        var jsonSocket: any = new this.jsonSocket(socket);
-        jsonSocket.on('message', (data:any) => {
-            console.log('TCP! received data from client! - ', data);
-            jsonSocket.sendMessage({
-                message: 'Im server!'
-            });
+        this.tcpJsonSocket = new this.jsonSocket(socket);
+        this.tcpJsonSocket.on('message', (data:any) => {
+            this.receiveMessage(data);
         });
         this.tcpSockets.push(socket);
         console.log('client connected!');
@@ -96,33 +96,26 @@ export class DirectConnection {
         if (i > -1)
             this.tcpSockets.splice(i, 1);
 
-        console.log('Client disconnected');
+        console.log('client disconnected');
         this.handleReliableChannelStateChange();
     } 
 
     private createFastDataChannel() {
-        /*
-        this.udpServer = new this.kalm.Server({
-            port: 7000,
-            adapter: 'udp',
-            encoder: 'json',
-            channels: {
-                clientMessage: (data:any) => {
-                    console.log(data);
-                    this.udpServer.whisper('test', {a: 'bye!'});
-                    this.receiveMessage(data);
-                }
-            }
+        this.udpServer = dgram.createSocket('udp4');
+
+        this.udpServer.on('listening', () => {
+            var address = this.udpServer.address();
+            console.log('UDP Server listening on ' + address.address + ":" + address.port);
         });
 
-		this.udpServer.on('ready', () => {
-			console.log('UDP Server is listening on port 7000');
-		});
+        this.udpServer.on('message', (message, remote) => {
+            this.udpClientAddress = remote.address;
+            this.udpClientPort = remote.port;
 
-		this.udpServer.on('error', (error:any) => {
-			console.log('ERROR: ', error);
-		});
-        */
+            this.receiveMessage(JSON.parse(message.toString())); 
+        });
+
+        this.udpServer.bind(this.udpPort, this.hostname);
     }
 
     private receiveMessage(data: any) {
@@ -140,26 +133,31 @@ export class DirectConnection {
 
     public sendDataUsingReliableChannel(data: any) {
         if(this.isReadyToSend()) {
-            //his.tcpServer.broadcast('droneMessage', data);  
+            this.tcpJsonSocket.sendMessage(data);
         }
     }
 
     public sendDataUsingFastChannel(data: any) {
-        if(this.isReadyToSend()) {
-            //this.udpServer.broadcast('droneMessage', data);
+        if(this.isReadyToSend() && this.udpClientAddress && this.udpClientPort) {
+            var buff = new Buffer(JSON.stringify(data));
+            this.udpServer.send(buff, 0, buff.length, this.udpClientPort, this.udpClientAddress);
         }
     }
 
     private closeConnection() {
-        this.handleReliableChannelStateChange();
-        
         this.tcpServer.close();
+        this.tcpServer.removeAllListeners();
+
         this.tcpSockets.forEach((socket) => {
+            socket.removeAllListeners();
             socket.end();
         });
         this.tcpSockets = [];
 
+        this.udpServer.removeAllListeners();
+        this.udpServer.close();
+        this.udpServer.unref();
 
-        //this.udpServer.stop();
+        this.handleReliableChannelStateChange();
     }
 }
