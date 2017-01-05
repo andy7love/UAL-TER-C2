@@ -1,6 +1,8 @@
 # UAL-TER-C2
 Unmanned Aircraft Life - Terminal C2
+
 Drone software written in NodeJS with Johnny-Five using Raspberry Pi 3 and Arduino.
+
 Communication with "https://github.com/andy7love/UAL-TER-CLIENT" using UDP+TCP with a relay server using WebRTC.
 
 ## States and Modules
