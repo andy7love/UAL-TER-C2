@@ -21,8 +21,8 @@ class Configuration {
     private settings: DroneConfiguration;
 
 	private constructor () {
-        let defaults: DroneConfiguration = require('../../default.config.json');
-        let env = require('../../env.config.json');
+        let defaults: DroneConfiguration = require('../../config/default.config.json');
+        let env = require('../../config/env.config.json');
         this.settings = defaults;
         _.extend(this.settings, env);
 	}
