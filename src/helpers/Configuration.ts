@@ -1,19 +1,5 @@
 import { Utils } from '../helpers/Utils';
-
-enum InitializationMode {
-    NORMAL = 0,
-    SIMULATION = 1,
-    CHECK = 2
-}
-
-interface DroneConfiguration {
-    mode: InitializationMode, 
-    communication: {
-        hostname: string,
-        tcpPort: number,
-        udpPort: number
-    }
-}
+import { DroneConfiguration } from '../interfaces/Configuration'
 
 class Configuration {
 	private static instance: Configuration = null;

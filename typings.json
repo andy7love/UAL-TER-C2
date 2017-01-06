@@ -3,7 +3,6 @@
   "dependencies": {},
   "globalDependencies": {
     "baconjs": "registry:dt/baconjs#0.7.0+20160317120654",
-    "es6-promise": "registry:dt/es6-promise#0.0.0+20160614011821",
     "jquery": "registry:dt/jquery#1.10.0+20160929162922",
     "node": "registry:env/node#6.0.0+20161105011511",
     "socket.io-client": "registry:dt/socket.io-client#1.4.4+20160317120654",

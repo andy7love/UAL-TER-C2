@@ -5,7 +5,9 @@
   "main": "build/index.js",
   "scripts": {
     "start": "node build/index",
+    "check": "node build/index check",
     "dev": "gulp && node build/index",
+    "dev-check": "gulp && node build/index check",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

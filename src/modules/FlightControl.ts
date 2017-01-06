@@ -1,18 +1,40 @@
 import { DroneState } from "../states/DroneState";
+import { DroneModule } from '../interfaces/Module'
 let CANNON = require('cannon');
 
-export class FlightControl {
+export class FlightControl implements DroneModule {
+	public name: string = 'Flight Control';
 	private state: DroneState;
+	private disposers: Array<any> = [];
 
-	constructor (state: DroneState) {
+	constructor () {
+
+	}
+
+	public setState(state: DroneState) {
 		this.state = state;
-		this.configureActions();
+	}
+
+	public enable(): Promise<string> {
+		return new Promise<string>((resolve, reject) => {
+			this.configureActions();
+			resolve();
+		});
+	}
+
+	public disable(): Promise<string> {
+		return new Promise<string>((resolve, reject) => {
+			this.disposers.forEach(dispose => {
+				dispose();
+			});
+			resolve();
+		});
 	}
 
 	private configureActions() {
 		let position: CANNON.Vec3 = new CANNON.Vec3(0,0,0);
 		let orientation: CANNON.Vec3 = new CANNON.Vec3(0,0,0);
-		this.state.flight
+		this.disposers.push(this.state.flight
 			.getStream()
 			.changes()
 			.onValue((flightState) => {
@@ -32,6 +54,6 @@ export class FlightControl {
 						throttle: (-flightState.pitch - flightState.roll - flightState.yaw) * steeringFactor + flightState.throttle
 					}
 				});
-			});
+			}));
 	}
 }

@@ -6,6 +6,7 @@ import Configuration from './Configuration';
 interface DirectConnectionSettings {
     events: {
         readyToSend: (ready: boolean) => void,
+        started: () => void,
         messageReceived: (data: any) => void
     }
 }
@@ -79,6 +80,7 @@ export class DirectConnection {
 
         this.tcpServer.listen(this.tcpPort, this.hostname, () => {
             console.log('TCP Server is listening on port', this.tcpPort);
+            this.settings.events.started();
         });
     }
 

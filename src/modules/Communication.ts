@@ -4,29 +4,52 @@ let Bacon = require('baconjs');
 import { Utils } from "../helpers/Utils";
 import { DirectConnection } from "../helpers/DirectConnection";
 import { DroneState } from "../states/DroneState";
+import { DroneModule } from '../interfaces/Module'
 
-export class Communication {
+export class Communication implements DroneModule {
+	public name: string = 'Communication';
 	private state: DroneState;
 	private connection: DirectConnection;
+	private disposers: Array<any> = [];
 
-	constructor (state: DroneState) {
-		this.state = state;
-		this.initConnection();
-		this.configureStreaming();
+	constructor () {
+
 	}
 
-	private initConnection() {
+	public setState(state: DroneState) {
+		this.state = state;
+	}
+
+	public enable(): Promise<string> {
+		return new Promise<string>((resolve, reject) => {
+			this.initConnection(() => {
+				resolve();
+			});
+			this.configureStreaming();
+		});
+	}
+
+	public disable(): Promise<string> {
+		return new Promise<string>((resolve, reject) => {
+			this.connection.disconnect();
+			this.disposers.forEach(dispose => {
+				dispose();
+			});
+			resolve();
+		});
+	}
+
+	private initConnection(cb: Function) {
 		this.connection = new DirectConnection({
 			events: {
 				messageReceived: (message: any) => {
 					this.handleMessageReceived(message);
 				},
 				readyToSend: (ready:boolean) => {
-					console.log('ready to send', ready);
 					this.state.communication.connected.setValue(ready);
-
-					this.connection.sendDataUsingFastChannel('hola');
-					this.connection.sendDataUsingFastChannel({a: 'hola'});
+				},
+				started: () => {
+					cb();
 				}
 			}
 		});
@@ -34,7 +57,7 @@ export class Communication {
 	}
 
 	private configureStreaming() {
-		Bacon.when([
+		this.disposers.push(Bacon.when([
 					this.state.simulation.position.getStream(),
 					this.state.simulation.orientation.getStream().changes()
 				],
@@ -54,7 +77,7 @@ export class Communication {
 						orientation: state.orientation
 					}
 				});
-			});
+			}));
 	}
 
 	private handleMessageReceived(data: any) {

@@ -1,16 +1,73 @@
-import { DroneState } from './states/DroneState';
-import { Communication } from './modules/Communication';
-import { FlightControl } from './modules/FlightControl';
-import { Simulation } from './modules/Simulation';
 import Configuration from './helpers/Configuration';
+import { DroneState } from "./states/DroneState";
+import { ModulesManager } from './managers/ModulesManager';
+import { ModulesManagerBuilder } from './builders/ModulesManagerBuilder';
+import { DroneConfiguration, InitializationMode } from './interfaces/Configuration';
+let chalk: any = require('chalk');
 
 /*
 let d = require('johnny-five');
 */
 
-console.log(Configuration.mode);
-
+/**
+ * BUILDING MODULES.
+ */
 let state = new DroneState();
-let communication = new Communication(state);
-let flightControl = new FlightControl(state);
-let simulation = new Simulation(state);
+let modulesManager = new ModulesManager(state);
+
+switch(Configuration.mode) {
+    case InitializationMode.NORMAL:
+        console.log(chalk.blue('Initialization mode: NORMAL'));
+        ModulesManagerBuilder.BuildHardwareModules(modulesManager);
+        break;
+    case InitializationMode.SIMULATION:
+        console.log(chalk.blue('Initialization mode: SIMULATION'));
+        ModulesManagerBuilder.BuildSimulationModules(modulesManager);
+        break;
+    default:
+        throw new Error('Invalid initialization mode.');
+}
+
+ModulesManagerBuilder.BuildLogicModules(modulesManager);
+
+/**
+ * STARTING.
+ */
+if(process.argv[2] !== undefined && process.argv[2] === 'check') {
+    modulesManager.checkAll().then(() => {
+        process.exit();
+    }).then(() => {
+        process.exit();
+    });
+} else {
+    modulesManager.enableAll().catch(() => {
+        console.log(chalk.red('System critical error on 1 module'));
+        modulesManager.disableAll();
+        process.exit();
+    });
+}
+
+/**
+ * CONSOLE.
+ */
+process.stdin.setEncoding('utf8');
+process.stdin.on('readable', () => {
+    var chunk = process.stdin.read();
+    if (chunk !== null) {
+        switch(chunk.toString().trim()) {
+            case 'shutdown':
+            case 'exit':
+            case 'close':
+                console.log(chalk.yellow('Shutdown command received.'));
+                modulesManager.disableAll().then(() => {
+                    process.exit();
+                }, () => {
+                    process.exit();
+                });
+            break;
+            default:
+                console.log(chalk.grey('Command not found: ' + chunk));
+                break;
+        }
+    }
+});
