@@ -1,6 +1,7 @@
 /// <reference path="../../typings/globals/socket.io-client/index.d.ts" />
 import * as net from 'net';
 import * as dgram from 'dgram';
+import Configuration from '../managers/Configuration';
 
 interface DirectConnectionSettings {
     events: {
@@ -17,15 +18,15 @@ export class DirectConnection {
     
     private settings: DirectConnectionSettings;
     private jsonSocket: any = null;
-    private hostname: string =  '0.0.0.0';
+    private hostname: string =  Configuration.communication.hostname;
 
-    private tcpPort: number = 6000;
+    private tcpPort: number = Configuration.communication.tcpPort;
     private tcpServer: net.Server = null;
     private tcpSockets: Array<net.Socket> = [];
     private tcpJsonSocket: any = null;
 
     private udpServer: dgram.Socket;
-    private udpPort: number = 7000;
+    private udpPort: number = Configuration.communication.udpPort;
     private udpClientAddress: string = null;
     private udpClientPort: number = null;
 

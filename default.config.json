@@ -1,0 +1,8 @@
+{
+    "mode": 0,
+    "communication": {
+        "hostname": "0.0.0.0",
+        "tcpPort": 6000,
+        "udpPort": 7000
+    }
+}
