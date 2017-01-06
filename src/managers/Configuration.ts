@@ -1,5 +1,4 @@
-/// <reference path="../../typings/globals/underscore/index.d.ts" />
-let _: UnderscoreStatic = require('underscore');
+import { Utils } from '../helpers/Utils';
 
 enum InitializationMode {
     NORMAL = 0,
@@ -24,7 +23,7 @@ class Configuration {
         let defaults: DroneConfiguration = require('../../config/default.config.json');
         let env = require('../../config/env.config.json');
         this.settings = defaults;
-        _.extend(this.settings, env);
+        Utils.deepExtend(this.settings, env);
 	}
 
     public static getSettings():DroneConfiguration {
