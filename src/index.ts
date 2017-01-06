@@ -2,7 +2,7 @@ import { DroneState } from './states/DroneState';
 import { Communication } from './modules/Communication';
 import { FlightControl } from './modules/FlightControl';
 import { Simulation } from './modules/Simulation';
-import Configuration from './managers/Configuration';
+import Configuration from './helpers/Configuration';
 
 /*
 let d = require('johnny-five');

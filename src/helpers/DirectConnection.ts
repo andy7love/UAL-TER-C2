@@ -1,7 +1,7 @@
 /// <reference path="../../typings/globals/socket.io-client/index.d.ts" />
 import * as net from 'net';
 import * as dgram from 'dgram';
-import Configuration from '../managers/Configuration';
+import Configuration from './Configuration';
 
 interface DirectConnectionSettings {
     events: {
@@ -78,7 +78,7 @@ export class DirectConnection {
         });
 
         this.tcpServer.listen(this.tcpPort, this.hostname, () => {
-            console.log('TCP Server is listening on port ', this.tcpPort);
+            console.log('TCP Server is listening on port', this.tcpPort);
         });
     }
 
