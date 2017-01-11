@@ -1,9 +1,10 @@
 import { ModulesManager } from '../managers/ModulesManager';
 import { DroneState } from '../states/DroneState';
-import { Communication } from '../modules/Communication';
-import { FlightControl } from '../modules/FlightControl';
+/*
+import { Communication } from '../modules/logic/Communication';
+import { FlightControl } from '../modules/simulation/EnginesController';
 import { Simulation } from '../modules/Simulation';
-
+*/
 export class ModulesManagerBuilder {
     constructor() {
         
@@ -14,11 +15,13 @@ export class ModulesManagerBuilder {
     }
 
     public static BuildSimulationModules(moduleMgr: ModulesManager) {
-        moduleMgr.add(new FlightControl());
-        moduleMgr.add(new Simulation());
+        moduleMgr.loadModule('simulation/EnginesController');
+        moduleMgr.loadModule('simulation/IMU');
+        moduleMgr.loadModule('simulation/Simulation');
     }
 
     public static BuildLogicModules(moduleMgr: ModulesManager) {
-        moduleMgr.add(new Communication());
+        moduleMgr.loadModule('logic/STS');
+        moduleMgr.loadModule('logic/Communication');
     }
 }

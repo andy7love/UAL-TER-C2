@@ -10,6 +10,13 @@ export class ModulesManager {
         this.state = state;
     }
 
+    public loadModule(modulePath: string) {
+        let moduleName = modulePath.split('/').pop();
+        let moduleLib = require('../modules/' + modulePath);
+        let moduleInstance = new moduleLib[moduleName]();
+        this.add(moduleInstance);
+    }
+
     public add(m: DroneModule) {
         m.setState(this.state);
         this.modules.push(m);
@@ -112,7 +119,7 @@ export class ModulesManager {
             promises.push(promise);
         }
 
-        console.log(chalk.grey("Shutdown command was sended to all modules."));
+        console.log(chalk.grey("Shutdown command was sent to all modules."));
 
         return Promise.all(promises).then(() => {
             console.log('[ ' + chalk.grey("SHUTDOWN") + ' ] ' + 'All modules successfully disabled.');

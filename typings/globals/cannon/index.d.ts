@@ -306,6 +306,10 @@ declare namespace CANNON {
         toEuler(target: any, order: any): void;
         toString(): any;
         vmult(v: any, target: any): any;
+        x: number;
+        y: number;
+        z: number;
+        w: number;
     }
     export class Ray {
         constructor(from: any, to: any);

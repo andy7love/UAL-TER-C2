@@ -1,10 +1,10 @@
-/// <reference path="../../typings/globals/baconjs/index.d.ts" />
+/// <reference path="../../../typings/globals/baconjs/index.d.ts" />
 let Bacon = require('baconjs');
 
-import { Utils } from "../helpers/Utils";
-import { DirectConnection } from "../helpers/DirectConnection";
-import { DroneState } from "../states/DroneState";
-import { DroneModule } from '../interfaces/Module'
+import { Utils } from "../../helpers/Utils";
+import { DirectConnection } from "../../helpers/DirectConnection";
+import { DroneState } from "../../states/DroneState";
+import { DroneModule } from '../../interfaces/Module'
 
 export class Communication implements DroneModule {
 	public name: string = 'Communication';
@@ -83,7 +83,7 @@ export class Communication implements DroneModule {
 	private handleMessageReceived(data: any) {
 		try {
 			if(data.joystick !== undefined) {
-				this.state.flight.setValue(data.joystick);
+				this.state.target.steering.setValue(data.joystick);
 			}
 		} catch(e) {
 			console.log('Error! Failed to parse message from client');

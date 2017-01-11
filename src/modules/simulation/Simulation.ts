@@ -1,6 +1,6 @@
-/// <reference path="../../typings/globals/cannon/index.d.ts" />
-import { DroneState } from "../states/DroneState";
-import { DroneModule } from '../interfaces/Module';
+/// <reference path="../../../typings/globals/cannon/index.d.ts" />
+import { DroneState } from "../../states/DroneState";
+import { DroneModule } from '../../interfaces/Module';
 let CANNON = require('cannon');
 
 export class Simulation implements DroneModule {
@@ -119,15 +119,15 @@ export class Simulation implements DroneModule {
         /**
          * Apply joystick and "air" parameters to fake motors.
          */
-        let enginesState = this.state.engines.getValue();
+        let enginesState = this.state.target.engines.getValue();
 
         let localPoint: CANNON.Vec3 = new CANNON.Vec3(0,0,0);
         let airPressureFactor = this.drone.position.y * -0.01 + 1;
         let forceFactor = 55 * airPressureFactor;
         let torqueFactor = forceFactor;
 
-        this.engines[0].applyLocalForce(new CANNON.Vec3(-enginesState.rlEngine.throttle*torqueFactor, enginesState.rlEngine.throttle*forceFactor, 0), localPoint);
-        this.engines[1].applyLocalForce(new CANNON.Vec3(enginesState.rrEngine.throttle*torqueFactor, enginesState.rrEngine.throttle*forceFactor, 0), localPoint);
+        this.engines[0].applyLocalForce(new CANNON.Vec3(-enginesState.blEngine.throttle*torqueFactor, enginesState.blEngine.throttle*forceFactor, 0), localPoint);
+        this.engines[1].applyLocalForce(new CANNON.Vec3(enginesState.brEngine.throttle*torqueFactor, enginesState.brEngine.throttle*forceFactor, 0), localPoint);
         this.engines[2].applyLocalForce(new CANNON.Vec3(enginesState.frEngine.throttle*torqueFactor, enginesState.frEngine.throttle*forceFactor, 0), localPoint);
         this.engines[3].applyLocalForce(new CANNON.Vec3(-enginesState.flEngine.throttle*torqueFactor, enginesState.flEngine.throttle*forceFactor, 0), localPoint);
 
@@ -144,11 +144,6 @@ export class Simulation implements DroneModule {
     }
 
 	private configureActions() {
-        this.disposers.push(this.state.engines
-            .getStream()
-            .changes()
-            .onValue((enginesState) => {
-                // nothing to do here, all is calculated on the simulation loop.
-            }));
+        // nothing yet...
 	}
 }

@@ -1,18 +1,42 @@
 import { CommunicationState } from "./CommunicationState";
-import { FlightState } from "./FlightState";
+import { SteeringState } from "./SteeringState";
+import { OrientationState } from "./OrientationState";
 import { SimulationState } from "./SimulationState";
 import { EnginesState } from "./EnginesState";
 
+interface DroneTargetStates {
+	engines: EnginesState,
+	steering: SteeringState,
+	//attitude: AttitudeTargetState,
+	//movement: MovementTargetState,
+	//position: PositionState	
+}
+
+interface DroneCurrentStates {
+	//position: PositionState,
+	orientation: OrientationState,
+	//speed: (movement,orientation),
+	//proximity: (bottom,left,right,top)	
+}
+
 export class DroneState {
 	public communication: CommunicationState;
-	public flight: FlightState;
 	public simulation: SimulationState;
-	public engines: EnginesState;
+
+	public target: DroneTargetStates;
+	public current: DroneCurrentStates;
 
 	constructor() {
 		this.communication = new CommunicationState();
-		this.flight = new FlightState();
 		this.simulation = new SimulationState();
-		this.engines = new EnginesState();
+
+		this.target = {
+			engines: new EnginesState(),
+			steering: new SteeringState()
+		};
+
+		this.current = {
+			orientation: new OrientationState()
+		};
 	}
 }

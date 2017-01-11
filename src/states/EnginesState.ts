@@ -7,8 +7,8 @@ interface EngineStateValue {
 interface EnginesStateValue {
 	flEngine: EngineStateValue, // 4 CW
 	frEngine: EngineStateValue, // 3 CCW
-	rlEngine: EngineStateValue, // 1 CCW
-	rrEngine: EngineStateValue // 2 CW
+	blEngine: EngineStateValue, // 1 CCW
+	brEngine: EngineStateValue // 2 CW
 }
 
 export class EnginesState extends StateProperty<EnginesStateValue> {
@@ -20,10 +20,10 @@ export class EnginesState extends StateProperty<EnginesStateValue> {
 			frEngine: {
 				throttle: 0	
 			},
-			rlEngine: {
+			blEngine: {
 				throttle: 0
 			},
-			rrEngine: {
+			brEngine: {
 				throttle: 0
 			}
 		});
