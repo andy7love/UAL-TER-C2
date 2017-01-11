@@ -11,7 +11,7 @@ export class ModulesManagerBuilder {
     }
 
     public static BuildHardwareModules(moduleMgr: ModulesManager) {
-        // nothing yet....
+        moduleMgr.loadModule('hardware/EnginesController');
     }
 
     public static BuildSimulationModules(moduleMgr: ModulesManager) {
