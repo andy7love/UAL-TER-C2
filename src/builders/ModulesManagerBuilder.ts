@@ -1,10 +1,6 @@
 import { ModulesManager } from '../managers/ModulesManager';
 import { DroneState } from '../states/DroneState';
-/*
-import { Communication } from '../modules/logic/Communication';
-import { FlightControl } from '../modules/simulation/EnginesController';
-import { Simulation } from '../modules/Simulation';
-*/
+
 export class ModulesManagerBuilder {
     constructor() {
         
