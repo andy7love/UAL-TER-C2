@@ -1,79 +1,21 @@
 # UAL-TER-C2
+
+**Software for UAV builded with Raspberry PI 3 and Arduino using NodeJS** 
+
 Unmanned Aircraft Life - Terminal C2
-Drone software written on NodeJS with Johnny-Five using Raspberry Pi 3 and Arduino.
 
-## States and Modules
-States | Modules | Comm Input
------- | ------- | ----------
-target.engines (fl,fr,bl,br) | Engines Controller | No
-target.steering (roll,pitch,yaw,throttle) | Steering Translation System | Direct Joystick
-target.attitude (roll,pitch,heading,verticalSpeed) | Stability Augmentation System | Attitude from Joystick
-target.movement (horizontalSpeed,heading,verticalSpeed) | Advanced Flight System | Arcade like Joystick
-target.position (lattitude,longitude,altitude) | Navigation System | Map Waypoints
+Drone software written in NodeJS with Johnny-Five using Raspberry Pi 3 and Arduino.
 
-### Helper modules
-+ Measurement Processor System (used by SAS, AFS and Nav System)
-+ Obstacle Tracking System (used by Obstacle Avoidance System)
-+ Obstacle Avoidance System (used by Advanced Flight System)
-+ Indoor position (used by Nav System when indoor)
+### More info
 
-### Sensor modules
-+ Camera
-+ Altimeter
-+ IMU
-+ GPS
-+ Proximity x6 (front,back,right,left,top,bottom)
-+ DC Voltage
+Communication with client using UDP+TCP with a relay server using WebRTC.
 
-### Other modules
-+ LEDs
+Please visit wiki pages for more information about communication and modules.
 
-## Objetives 
+Wiki: https://github.com/andy7love/UAL-TER-C2/wiki
 
-### Initialization modes
-+ Normal
-+ Simulation (mocks all sensors and engines).
+### Client
 
-### Broadcast status
-#### Basic Sensors information
-+ Camera streaming
-+ Altitude
-+ IMU (all axis orientation)
-+ Proximity (all axis obstacles)
-+ DC Voltage
-+ GPS (lat/long/altitude coordinates)
-+ Indoor position (wifi triangulation)
+For further information about the client please refer to client repo.
 
-#### Real-time processed information
-+ Proximity alert
-+ Low-bat alert
-+ Relative movement
-+ Indoor map
-
-#### On-demand information
-+ Modules initialization
-+ Modules status
-+ Entire snapshot status
-+ Debug mode
-+ Logs
-
-### Receive commands
-#### Miscellaneous
-+ System restart/shutdown
-+ Emergency cut-off engines
-+ Basic camera/lights on/off commands
-
-#### Complete Manual Flight
-+ Basic direct-Joystick commands such as x,y,z and thottle values directly translated to engines.
-
-#### Assisted Manual Flight
-+ Advanced flight attitudes such as heading, roll, pitch and altitude values.
-+ Automatic reactions to prevent crash using proximity sensors.
-+ Action commands such as maintain vertical/horizontal speed.
-+ More advanced commands such as take-off, landing, hover.
-+ Emergency hover.
- 
-#### Navigation Mode
-+ Navigation commands such as GoTo (lattitude/longitude/altittude).
-+ Navitation commands using waypoints.
-+ Follow command.
+Client repo: https://github.com/andy7love/UAL-TER-CLIENT

@@ -1,13 +1,13 @@
 import { StateProperty } from "../helpers/StateProperty";
 
-interface FlightStateValue {
+interface SteeringValue {
 	yaw: number;
 	pitch: number;
 	roll: number;
 	throttle: number;
 }
 
-export class FlightState extends StateProperty<FlightStateValue> {
+export class SteeringState extends StateProperty<SteeringValue> {
 	constructor () {
 		super({
 			yaw: 0,
