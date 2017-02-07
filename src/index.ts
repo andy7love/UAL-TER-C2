@@ -1,13 +1,9 @@
-import Configuration from './helpers/Configuration';
+import Configuration from './services/ConfigurationService';
 import { DroneState } from "./states/DroneState";
 import { ModulesManager } from './managers/ModulesManager';
 import { ModulesManagerBuilder } from './builders/ModulesManagerBuilder';
 import { DroneConfiguration, InitializationMode } from './interfaces/Configuration';
 let chalk: any = require('chalk');
-
-/*
-let d = require('johnny-five');
-*/
 
 /**
  * BUILDING MODULES.
@@ -58,6 +54,7 @@ process.stdin.on('readable', () => {
             case 'shutdown':
             case 'exit':
             case 'close':
+            case 'q':
                 console.log(chalk.yellow('Shutdown command received.'));
                 modulesManager.disableAll().then(() => {
                     process.exit();

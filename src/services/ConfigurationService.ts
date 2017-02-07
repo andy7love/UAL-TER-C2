@@ -1,8 +1,8 @@
 import { Utils } from '../helpers/Utils';
 import { DroneConfiguration } from '../interfaces/Configuration'
 
-class Configuration {
-	private static instance: Configuration = null;
+class ConfigurationService {
+	private static instance: ConfigurationService = null;
     private settings: DroneConfiguration;
 
 	private constructor () {
@@ -13,11 +13,11 @@ class Configuration {
 	}
 
     public static getSettings():DroneConfiguration {
-        if(Configuration.instance === null)
-            Configuration.instance = new Configuration();
+        if(ConfigurationService.instance === null)
+            ConfigurationService.instance = new ConfigurationService();
         
-        return Configuration.instance.settings;
+        return ConfigurationService.instance.settings;
     }
 }
 
-export default Configuration.getSettings();
+export default ConfigurationService.getSettings();

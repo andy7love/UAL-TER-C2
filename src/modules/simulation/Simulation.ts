@@ -126,10 +126,10 @@ export class Simulation implements DroneModule {
         let forceFactor = 55 * airPressureFactor;
         let torqueFactor = forceFactor;
 
-        this.engines[0].applyLocalForce(new CANNON.Vec3(-enginesState.blEngine.throttle*torqueFactor, enginesState.blEngine.throttle*forceFactor, 0), localPoint);
-        this.engines[1].applyLocalForce(new CANNON.Vec3(enginesState.brEngine.throttle*torqueFactor, enginesState.brEngine.throttle*forceFactor, 0), localPoint);
-        this.engines[2].applyLocalForce(new CANNON.Vec3(enginesState.frEngine.throttle*torqueFactor, enginesState.frEngine.throttle*forceFactor, 0), localPoint);
-        this.engines[3].applyLocalForce(new CANNON.Vec3(-enginesState.flEngine.throttle*torqueFactor, enginesState.flEngine.throttle*forceFactor, 0), localPoint);
+        this.engines[0].applyLocalForce(new CANNON.Vec3(-enginesState.bl.throttle*torqueFactor, enginesState.bl.throttle*forceFactor, 0), localPoint);
+        this.engines[1].applyLocalForce(new CANNON.Vec3(enginesState.br.throttle*torqueFactor, enginesState.br.throttle*forceFactor, 0), localPoint);
+        this.engines[2].applyLocalForce(new CANNON.Vec3(enginesState.fr.throttle*torqueFactor, enginesState.fr.throttle*forceFactor, 0), localPoint);
+        this.engines[3].applyLocalForce(new CANNON.Vec3(-enginesState.fl.throttle*torqueFactor, enginesState.fl.throttle*forceFactor, 0), localPoint);
 
         /**
          * Set result position and orientation. 

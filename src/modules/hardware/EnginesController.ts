@@ -1,11 +1,19 @@
 import { DroneState } from "../../states/DroneState";
 import { DroneModule } from "../../interfaces/Module";
+import Configuration from '../../services/ConfigurationService';
+import BoardService from "../../services/BoardService";
 
 export class EnginesController implements DroneModule {
 	public name: string = 'Engines Controller';
 	private state: DroneState;
 	private disposers: Array<any> = [];
 	private enabled: boolean = false;
+	private escs: {
+		fl: any,
+		fr: any,
+		bl: any,
+		br: any
+	};
 
 	constructor () {
 
@@ -16,75 +24,94 @@ export class EnginesController implements DroneModule {
 	}
 
 	public enable(): Promise<string> {
+		return this.configureMotors()
+				.then(this.armMotors)
+				.then(this.configureActions);
+	}
+
+	public disable(): Promise<string> {
 		return new Promise<string>((resolve, reject) => {
-			this.configureActions(() => {
+			this.disarmMotors().then(() => {
+				this.enabled = false;
+				this.disposers.forEach(dispose => {
+					dispose();
+				});
 				resolve();
 			});
 		});
 	}
 
-	public disable(): Promise<string> {
+	private configureESC(pin: number) {
+		let five: any = require("johnny-five");
+		return new five.ESC({
+			pwmRange: Configuration.motors.pwmRange,
+			pin: pin
+		});
+	}
+
+	private configureMotors(): Promise<string> {
 		return new Promise<string>((resolve, reject) => {
-			this.disposers.forEach(dispose => {
-				dispose();
+			BoardService.getBoard(Configuration.motors.board).then((board) => {
+				this.escs.fl = this.configureESC(Configuration.motors.pins.fl);
+				this.escs.fr = this.configureESC(Configuration.motors.pins.fr);
+				this.escs.bl = this.configureESC(Configuration.motors.pins.bl);
+				this.escs.br = this.configureESC(Configuration.motors.pins.br);
+				resolve();
 			});
+		});
+	}
+
+	private armMotor(esc: any) {
+		setTimeout(() => {
+			esc.speed(100);
+		}, 100);
+
+		setTimeout(() => {
+			esc.speed(0);
+		}, 1000);
+	}
+
+	private armMotors(): Promise<string> {
+		return new Promise<string>((resolve, reject) => {
+			this.armMotor(this.escs.fl);
+			this.armMotor(this.escs.fr);
+			this.armMotor(this.escs.bl);
+			this.armMotor(this.escs.br);
+
+			setTimeout(() => {
+				this.enabled = true;
+				resolve();
+			}, 1100);
+		});
+	}
+
+	private disarmMotors(): Promise<string> {
+		return new Promise<string>((resolve, reject) => {
+			if(this.enabled) {
+				this.escs.fl.speed(0);
+				this.escs.fr.speed(0);
+				this.escs.bl.speed(0);
+				this.escs.br.speed(0);
+			}
 			resolve();
 		});
 	}
 
-	private configureActions(cb: Function) {
-		let five = require("johnny-five");
-		let Raspi;
-		try {
-			Raspi = require("raspi-io");
-		} catch (er) {
-			Raspi = null;
-			throw "Raspi-io not installed!";
-		}
+	private configureActions(): Promise<string> {
+		return new Promise<string>((resolve, reject) => {
+			this.disposers.push(this.state.target.engines
+				.getStream()
+				.changes()
+				.onValue((enginesState) => {
+					if(this.enabled) {
+						this.escs.fl.speed(enginesState.fl.throttle*100);
+						this.escs.fr.speed(enginesState.fr.throttle*100);
+						this.escs.bl.speed(enginesState.bl.throttle*100);
+						this.escs.br.speed(enginesState.br.throttle*100);
+					}
+				}));
 
-		var ports = [
-			{ id: "A", port: "/dev/ttyACM0" },
-			{ id: "rpi", io: new Raspi() }
-		];
-
-		console.log('Waiting for boards...');
-
-		let arduino;
-		let rpi;
-		var esc: any;
-
-		var initMotors = () => {
-			esc = new five.ESC({
-				pwmRange: [2000,1000],
-				pin: 9
-			});
-
-			setTimeout(() => {
-				esc.speed(100);
-				console.log('100');
-			}, 100);
-
-			setTimeout(() => {
-				esc.speed(0);
-				console.log('0');
-				this.enabled = true;
-				cb();
-			}, 1000);
-		};
-
-		var board = new five.Boards(ports).on("ready", function() {
-			arduino = this[0];
-			rpi = this[1];
-			initMotors();
+			resolve();
 		});
-		
-        this.disposers.push(this.state.target.engines
-            .getStream()
-            .changes()
-            .onValue((enginesState) => {
-				if(this.enabled) {
-					esc.speed(enginesState.blEngine.throttle*100);
-				}
-            }));
 	}
 }

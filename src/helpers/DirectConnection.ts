@@ -1,7 +1,7 @@
 /// <reference path="../../typings/globals/socket.io-client/index.d.ts" />
 import * as net from 'net';
 import * as dgram from 'dgram';
-import Configuration from './Configuration';
+import Configuration from '../services/ConfigurationService';
 
 interface DirectConnectionSettings {
     events: {

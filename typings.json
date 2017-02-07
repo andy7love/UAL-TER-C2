@@ -1,6 +1,8 @@
 {
   "name": "ual-ter-c2",
-  "dependencies": {},
+  "dependencies": {
+    "johnny-five": "registry:dt/johnny-five#0.0.0+20161226025359"
+  },
   "globalDependencies": {
     "babylonjs": "registry:dt/babylonjs#2.3.0+20160513001857",
     "baconjs": "registry:dt/baconjs#0.7.0+20160317120654",

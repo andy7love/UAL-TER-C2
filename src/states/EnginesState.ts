@@ -5,25 +5,25 @@ interface EngineStateValue {
 }
 
 interface EnginesStateValue {
-	flEngine: EngineStateValue, // 4 CW
-	frEngine: EngineStateValue, // 3 CCW
-	blEngine: EngineStateValue, // 1 CCW
-	brEngine: EngineStateValue // 2 CW
+	fl: EngineStateValue, // 4 CW
+	fr: EngineStateValue, // 3 CCW
+	bl: EngineStateValue, // 1 CCW
+	br: EngineStateValue // 2 CW
 }
 
 export class EnginesState extends StateProperty<EnginesStateValue> {
 	constructor () {
 		super({
-			flEngine: {
+			fl: {
 				throttle: 0
 			},
-			frEngine: {
+			fr: {
 				throttle: 0	
 			},
-			blEngine: {
+			bl: {
 				throttle: 0
 			},
-			brEngine: {
+			br: {
 				throttle: 0
 			}
 		});

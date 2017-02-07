@@ -4,5 +4,20 @@
         "hostname": "0.0.0.0",
         "tcpPort": 6000,
         "udpPort": 7000
+    },
+    "battery": {
+        "voltageMin": 10,
+        "voltageMax": 12.8,
+        "voltageStore": 11.4
+    },
+    "motors": {
+        "pwmRange": [2000, 1000],
+        "board": 0,
+        "pins": {
+            "fl": 5,
+            "fr": 6,
+            "bl": 9,
+            "br": 10
+        }
     }
 }

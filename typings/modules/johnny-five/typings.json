@@ -1,0 +1,8 @@
+{
+  "resolution": "main",
+  "tree": {
+    "src": "https://raw.githubusercontent.com/DefinitelyTyped/DefinitelyTyped/b11fcff77625bcffe58c4fb5bd81980324733a72/johnny-five/index.d.ts",
+    "raw": "registry:dt/johnny-five#0.0.0+20161226025359",
+    "typings": "https://raw.githubusercontent.com/DefinitelyTyped/DefinitelyTyped/b11fcff77625bcffe58c4fb5bd81980324733a72/johnny-five/index.d.ts"
+  }
+}

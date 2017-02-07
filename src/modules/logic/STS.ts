@@ -39,16 +39,16 @@ export class STS implements DroneModule {
 				let steeringFactor = 0.03;
 
 				this.state.target.engines.setValue({
-					flEngine: {
+					fl: {
 						throttle: (steeringState.pitch + steeringState.roll - steeringState.yaw) * steeringFactor + steeringState.throttle   
 					},
-					frEngine: {
+					fr: {
 						throttle: (steeringState.pitch - steeringState.roll + steeringState.yaw) * steeringFactor + steeringState.throttle
 					},
-					blEngine: {
+					bl: {
 						throttle: (-steeringState.pitch + steeringState.roll + steeringState.yaw) * steeringFactor + steeringState.throttle
 					},
-					brEngine: {
+					br: {
 						throttle: (-steeringState.pitch - steeringState.roll - steeringState.yaw) * steeringFactor + steeringState.throttle
 					}
 				});

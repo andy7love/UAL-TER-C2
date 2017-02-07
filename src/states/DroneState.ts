@@ -3,6 +3,8 @@ import { SteeringState } from "./SteeringState";
 import { OrientationState } from "./OrientationState";
 import { SimulationState } from "./SimulationState";
 import { EnginesState } from "./EnginesState";
+import { DCSensorState } from "./DCSensorState";
+import { BatteryState } from "./BatteryState";
 
 interface DroneTargetStates {
 	engines: EnginesState,
@@ -15,6 +17,8 @@ interface DroneTargetStates {
 interface DroneCurrentStates {
 	//position: PositionState,
 	orientation: OrientationState,
+	dcSensor: DCSensorState,
+	battery: BatteryState
 	//speed: (movement,orientation),
 	//proximity: (bottom,left,right,top)	
 }
@@ -36,7 +40,9 @@ export class DroneState {
 		};
 
 		this.current = {
-			orientation: new OrientationState()
+			orientation: new OrientationState(),
+			dcSensor: new DCSensorState(),
+			battery: new BatteryState()
 		};
 	}
 }
