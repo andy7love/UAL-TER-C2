@@ -59,12 +59,14 @@ export class Communication implements DroneModule {
 	private configureStreaming() {
 		this.disposers.push(Bacon.when([
 					this.state.simulation.position.getStream(),
-					this.state.simulation.orientation.getStream().changes()
+					this.state.simulation.orientation.getStream().changes(),
+					this.state.current.battery.getStream().changes()
 				],
-				(position: any, orientation: any) => {
+				(position: any, orientation: any, battery: any) => {
 					return {
 						position: position,
-						orientation: orientation
+						orientation: orientation,
+						battery: battery
 					}
 				}
 			)
@@ -75,7 +77,8 @@ export class Communication implements DroneModule {
 					simulation: {
 						position: state.position,
 						orientation: state.orientation
-					}
+					},
+					battery: state.battery
 				});
 			}));
 	}
