@@ -5,6 +5,7 @@ import { SimulationState } from "./SimulationState";
 import { EnginesState } from "./EnginesState";
 import { DCSensorState } from "./DCSensorState";
 import { BatteryState } from "./BatteryState";
+import { StateProperty } from "../helpers/StateProperty";
 
 interface DroneTargetStates {
 	engines: EnginesState,
@@ -16,6 +17,7 @@ interface DroneTargetStates {
 
 interface DroneCurrentStates {
 	//position: PositionState,
+	calibratedImu: StateProperty<Boolean>,
 	orientation: OrientationState,
 	dcSensor: DCSensorState,
 	battery: BatteryState
@@ -40,6 +42,7 @@ export class DroneState {
 		};
 
 		this.current = {
+			calibratedImu: new StateProperty(false),
 			orientation: new OrientationState(),
 			dcSensor: new DCSensorState(),
 			battery: new BatteryState()

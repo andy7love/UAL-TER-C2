@@ -29,5 +29,8 @@ export interface DroneConfiguration {
             bl: number,
             br: number
         }
+    },
+    imu: {
+        board: BoardsIds
     }
 }
