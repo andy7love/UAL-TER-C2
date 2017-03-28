@@ -25,8 +25,8 @@ export class EnginesController implements DroneModule {
 
 	public enable(): Promise<string> {
 		return this.configureMotors()
-				.then(this.armMotors)
-				.then(this.configureActions);
+				.then(this.armMotors.bind(this))
+				.then(this.configureActions.bind(this));
 	}
 
 	public disable(): Promise<string> {
