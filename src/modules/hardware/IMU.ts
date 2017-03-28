@@ -19,7 +19,6 @@ export class IMU implements DroneModule {
 
 	public enable(): Promise<string> {
 		return new Promise<string>((resolve, reject) => {
-			console.log(Configuration.imu.board);
 			BoardService.getBoard(Configuration.imu.board).then((board) => {
 				let five: any = require("johnny-five");
 				this.imu = new five.IMU({

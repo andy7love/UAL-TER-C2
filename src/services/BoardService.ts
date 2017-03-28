@@ -3,44 +3,48 @@ import { DroneConfiguration, BoardsIds } from '../interfaces/Configuration'
 class BoardService {
 	private static instance: BoardService = null;
     private boards: Array<any> = [];
+    private initPromise: Promise<any> = null;
 
 	private constructor () {
 
 	}
 
     private initBoards():Promise<any> {
-        return new Promise<string>((resolve, reject) => {
-            let five: any = require("johnny-five"),
-                Raspi_IO: any,
-                arduino: any,
-                raspberry: any;
+        if(this.initPromise === null) {
+            this.initPromise = new Promise<string>((resolve, reject) => {
+                let five: any = require("johnny-five"),
+                    Raspi_IO: any,
+                    arduino: any,
+                    raspberry: any;
 
-            try {
-                Raspi_IO = require("raspi-io");
-            } catch (er) {
-                Raspi_IO = null;
-                reject("Raspi-io not installed!");
-            }
+                try {
+                    Raspi_IO = require("raspi-io");
+                } catch (er) {
+                    Raspi_IO = null;
+                    reject("Raspi-io not installed!");
+                }
 
-            let ports = [
-                { id: "A", port: "/dev/ttyACM0" },
-                { id: "rpi", io: new Raspi_IO() }
-            ];
+                let ports = [
+                    { id: "A", port: "/dev/ttyACM0" },
+                    { id: "rpi", io: new Raspi_IO() }
+                ];
 
-            console.log('Waiting for boards...');
+                console.log('Waiting for boards...');
 
-            let assignBoards = () => {
-                this.boards[BoardsIds.arduino] = arduino;
-                this.boards[BoardsIds.raspberry] = raspberry;
-            };
+                let assignBoards = () => {
+                    this.boards[BoardsIds.arduino] = arduino;
+                    this.boards[BoardsIds.raspberry] = raspberry;
+                };
 
-            let allBoards = new five.Boards(ports).on("ready", function() {
-                arduino = this[0];
-                raspberry = this[1];
-                assignBoards();
-                resolve();
+                let allBoards = new five.Boards(ports).on("ready", function() {
+                    arduino = this[0];
+                    raspberry = this[1];
+                    assignBoards();
+                    resolve();
+                });
             });
-        });
+        }
+        return this.initPromise;
     }
 
     public static getBoard(boardId: BoardsIds):Promise<any> {
