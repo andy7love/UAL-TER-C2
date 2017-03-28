@@ -20,6 +20,8 @@ export class IMU implements DroneModule {
 	public enable(): Promise<string> {
 		return new Promise<string>((resolve, reject) => {
 			BoardService.getBoard(Configuration.imu.board).then((board) => {
+				console.log(board);
+				console.log('imu start');
 				let five: any = require("johnny-five");
 				this.imu = new five.IMU({
 					board: board,
@@ -51,7 +53,7 @@ export class IMU implements DroneModule {
 			}
 		});
 
-		this.imu.on("change", function() {
+		this.imu.on("data", function() {
 			console.log(this);
 			state.current.orientation.setValue(this.quarternion);
 		});
