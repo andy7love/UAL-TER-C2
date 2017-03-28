@@ -52,6 +52,10 @@ export class EnginesController implements DroneModule {
 	private configureMotors(): Promise<string> {
 		return new Promise<string>((resolve, reject) => {
 			BoardService.getBoard(Configuration.motors.board).then((board) => {
+				console.log(Configuration.motors.pins.fl);
+				console.log(Configuration.motors.pins.fr);
+				console.log(Configuration.motors.pins.bl);
+				console.log(Configuration.motors.pins.br);
 				this.escs.fl = this.configureESC(Configuration.motors.pins.fl);
 				this.escs.fr = this.configureESC(Configuration.motors.pins.fr);
 				this.escs.bl = this.configureESC(Configuration.motors.pins.bl);
