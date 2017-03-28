@@ -30,7 +30,7 @@ export class IMU implements DroneModule {
 					enableExternalCrystal: false,
 					calibrationMask: 48
 				});
-				console.log(imu);
+				console.log(this.imu);
 				this.configureActions();
 				resolve();
 			});			
