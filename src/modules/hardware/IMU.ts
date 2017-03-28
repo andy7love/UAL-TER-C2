@@ -26,7 +26,7 @@ export class IMU implements DroneModule {
 				this.imu = new five.IMU({
 					board: board,
 					controller: "BNO055",
-					enableExternalCrystal: true,
+					enableExternalCrystal: false,
 					calibrationMask: 48
 				});
 				this.configureActions();
@@ -48,14 +48,23 @@ export class IMU implements DroneModule {
 		var state = this.state;
 
 		this.imu.on("calibration", (calibration: any) => {
+			console.log('calibration!');
 			if(calibration == 179) {
 				state.current.calibratedImu.setValue(true);
 			}
 		});
 
-		this.imu.on("data", function() {
+		this.imu.on("change", function(data:any) {
+			console.log('change');
 			console.log(this);
 			state.current.orientation.setValue(this.quarternion);
+		});
+
+		this.imu.on("data", function(data:any) {
+			console.log('data');
+			console.log(data);
+			console.log(this);
+			//state.current.orientation.setValue(this.quarternion);
 		});
 	}
 }
