@@ -52,6 +52,7 @@ export class IMU implements DroneModule {
 		});
 
 		this.imu.orientation.on("change", function() {
+			console.log(this.quaternion);
 			state.current.orientation.setValue(this.quarternion);
 		});
 	}
