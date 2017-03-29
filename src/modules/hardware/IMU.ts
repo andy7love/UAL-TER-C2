@@ -20,7 +20,6 @@ export class IMU implements DroneModule {
 	public enable(): Promise<string> {
 		return new Promise<string>((resolve, reject) => {
 			BoardService.getBoard(Configuration.imu.board).then((board) => {
-				console.log(board);
 				console.log('imu start');
 				
 				let five: any = require("johnny-five");
@@ -49,6 +48,8 @@ export class IMU implements DroneModule {
 	private configureActions() {
 		var state = this.state;
 
+		console.log('setup!!');
+		
 		this.imu.on("calibration", (calibration: any) => {
 			console.log('calibration!');
 			if(calibration == 179) {
