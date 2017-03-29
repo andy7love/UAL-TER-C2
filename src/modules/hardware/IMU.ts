@@ -49,14 +49,14 @@ export class IMU implements DroneModule {
 		var state = this.state;
 
 		console.log('setup!!');
-		
+
 		this.imu.on("calibration", (calibration: any) => {
 			console.log('calibration!');
 			if(calibration == 179) {
 				state.current.calibratedImu.setValue(true);
 			}
 		});
-
+/*
 		this.imu.on("change", function(data:any) {
 			console.log('change');
 			console.log(this);
@@ -82,5 +82,6 @@ export class IMU implements DroneModule {
 			console.log(this);
 			//state.current.orientation.setValue(this.quarternion);
 		});
+		*/
 	}
 }
