@@ -29,8 +29,9 @@ export class IMU implements DroneModule {
 					enableExternalCrystal: false,
 					calibrationMask: 48
 				});
-				console.log(this.imu);
+				//console.log(this.imu);
 				this.configureActions();
+				console.log('actions ready');
 				resolve();
 			});			
 		});
@@ -56,7 +57,7 @@ export class IMU implements DroneModule {
 				state.current.calibratedImu.setValue(true);
 			}
 		});
-/*
+
 		this.imu.on("change", function(data:any) {
 			console.log('change');
 			console.log(this);
@@ -82,6 +83,6 @@ export class IMU implements DroneModule {
 			console.log(this);
 			//state.current.orientation.setValue(this.quarternion);
 		});
-		*/
+		
 	}
 }
