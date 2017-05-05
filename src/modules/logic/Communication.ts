@@ -79,6 +79,7 @@ export class Communication implements DroneModule {
 			.skipDuplicates()
 			.skipWhile(this.state.communication.connected.getStream().map(Utils.negate))
 			.onValue((state:any) => {
+				console.log(state);
 				this.connection.sendDataUsingFastChannel(state);
 			}));
 	}
