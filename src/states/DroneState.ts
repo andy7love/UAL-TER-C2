@@ -1,6 +1,8 @@
 import { CommunicationState } from "./CommunicationState";
 import { SteeringState } from "./SteeringState";
 import { OrientationState } from "./OrientationState";
+import { AccelerometerState } from "./AccelerometerState";
+import { GyroscopeState } from "./GyroscopeState";
 import { SimulationState } from "./SimulationState";
 import { EnginesState } from "./EnginesState";
 import { DCSensorState } from "./DCSensorState";
@@ -18,7 +20,10 @@ interface DroneTargetStates {
 interface DroneCurrentStates {
 	//position: PositionState,
 	calibratedImu: StateProperty<Boolean>,
+	temperature: StateProperty<Number>,
 	orientation: OrientationState,
+	accelerometer: AccelerometerState,
+	gyroscope: GyroscopeState,
 	dcSensor: DCSensorState,
 	battery: BatteryState
 	//speed: (movement,orientation),
@@ -43,7 +48,10 @@ export class DroneState {
 
 		this.current = {
 			calibratedImu: new StateProperty(false),
+			temperature: new StateProperty(0),
 			orientation: new OrientationState(),
+			accelerometer: new AccelerometerState(),
+			gyroscope: new GyroscopeState(),
 			dcSensor: new DCSensorState(),
 			battery: new BatteryState()
 		};
