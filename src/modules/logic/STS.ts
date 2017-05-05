@@ -32,6 +32,7 @@ export class STS implements DroneModule {
 	}
 
 	private configureActions() {
+		// MOVE THIS TO ANOTHER MODULE.
 		this.disposers.push(this.state.current.accelerometer
 			.getStream()
 			.changes()
@@ -39,6 +40,7 @@ export class STS implements DroneModule {
 			.onValue((steeringState) => {
 				console.log('collision detected!!');
 			}));
+		// ----------------------------------
 
 		this.disposers.push(this.state.target.steering
 			.getStream()

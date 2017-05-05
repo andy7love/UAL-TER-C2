@@ -22,8 +22,6 @@ export class IMU implements DroneModule {
 	public enable(): Promise<string> {
 		return new Promise<string>((resolve, reject) => {
 			BoardService.getBoard(Configuration.imu.board).then((board) => {
-				console.log('imu start');
-				
 				let five: any = require("johnny-five");
 				this.imu = new five.IMU({
 					board: board,
@@ -31,20 +29,15 @@ export class IMU implements DroneModule {
 					enableExternalCrystal: false,
 					calibrationMask: 48
 				});
-				//console.log(this.imu);
 
 				this.configureActions();
 
 				this.imu.on("calibration", (calibration: any) => {
-					console.log('calibrating...');
 					resolve();
 					if(calibration == 179) {
-						console.log('calibration complete!');
 						this.state.current.calibratedImu.setValue(true);
 					}
 				});
-				
-				console.log('actions ready');
 			});			
 		});
 	}
@@ -60,8 +53,6 @@ export class IMU implements DroneModule {
 
 	private configureActions() {
 		var state = this.state;
-
-		console.log('setup!!');
 
 		this.imu.on("change", function(err:any, data:any) {
 			state.current.accelerometer.setValue({
