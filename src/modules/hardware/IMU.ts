@@ -59,30 +59,26 @@ export class IMU implements DroneModule {
 		});
 
 		this.imu.on("change", function(data:any) {
-			console.log('change');
-			console.log(this);
-			state.current.orientation.setValue(this.quarternion);
+			console.log('change!');
+			console.log('---');
+			//state.current.orientation.setValue(this.quarternion);
 		});
 
-		this.imu.on("data", function(data:any) {
+		this.imu.on("data", function(err:any, data:any) {
 			console.log('data');
-			console.log(data);
-			console.log(this);
-			//state.current.orientation.setValue(this.quarternion);
+			console.log("Accelerometer: %d, %d, %d", this.accelerometer.x, this.accelerometer.z, this.accelerometer.z);
+			console.log("Gyro: %d, %d, %d", this.gyro.x, this.gyro.z, this.gyro.z);
+			console.log("Temperature: %d", this.temperature.celsius);
+			console.log('---');
 		});
 
 		this.imu.orientation.on("change", function(data:any) {
-			console.log('orientation change');
-			console.log(this);
+			console.log(' orientation: ');
+			console.log("  heading      : ", this.euler.heading);
+			console.log("  roll         : ", this.euler.roll);
+			console.log("  pitch        : ", this.euler.pitch);
 			state.current.orientation.setValue(this.quarternion);
+			console.log('---');
 		});
-
-		this.imu.orientation.on("data", function(data:any) {
-			console.log('orientation data');
-			console.log(data);
-			console.log(this);
-			//state.current.orientation.setValue(this.quarternion);
-		});
-		
 	}
 }
