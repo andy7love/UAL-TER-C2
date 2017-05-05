@@ -54,20 +54,54 @@ export class IMU implements DroneModule {
 		console.log('setup!!');
 
 		this.imu.on("calibration", (calibration: any) => {
-			console.log('calibration!');
+			console.log('calibrating...');
 			if(calibration == 179) {
+				console.log('calibration complete!');
 				state.current.calibratedImu.setValue(true);
 			}
 		});
 
 		this.imu.on("change", function(err:any, data:any) {
+			console.log("Thermometer");
+			console.log("  celsius      : ", this.thermometer.celsius);
+			console.log("  fahrenheit   : ", this.thermometer.fahrenheit);
+			console.log("  kelvin       : ", this.thermometer.kelvin);
+			console.log("--------------------------------------");
+
+			console.log("Accelerometer");
+			console.log("  x            : ", this.accelerometer.x);
+			console.log("  y            : ", this.accelerometer.y);
+			console.log("  z            : ", this.accelerometer.z);
+			console.log("  pitch        : ", this.accelerometer.pitch);
+			console.log("  roll         : ", this.accelerometer.roll);
+			console.log("  acceleration : ", this.accelerometer.acceleration);
+			console.log("  inclination  : ", this.accelerometer.inclination);
+			console.log("  orientation  : ", this.accelerometer.orientation);
+			console.log("--------------------------------------");
+
+			console.log("Gyroscope");
+			console.log("  x            : ", this.gyro.x);
+			console.log("  y            : ", this.gyro.y);
+			console.log("  z            : ", this.gyro.z);
+			console.log("  pitch        : ", this.gyro.pitch);
+			console.log("  roll         : ", this.gyro.roll);
+			console.log("  yaw          : ", this.gyro.yaw);
+			console.log("  rate         : ", this.gyro.rate);
+			console.log("  isCalibrated : ", this.gyro.isCalibrated);
+			console.log("--------------------------------------");
+
+			console.log("magnetometer");
+			console.log("  heading : ", Math.floor(this.magnetometer.heading));
+			console.log("  bearing : ", this.magnetometer.bearing.name);
+			console.log("--------------------------------------");
+
 			state.current.accelerometer.setValue(new CANNON.Vec3(this.accelerometer.x, this.accelerometer.y, this.accelerometer.z));
 			state.current.gyroscope.setValue(new CANNON.Vec3(this.gyro.x, this.gyro.y, this.gyro.z));
 			state.current.temperature.setValue(this.temperature.celsius);
 		});
 
 		this.imu.orientation.on("change", function(err:any, data:any) {
-			console.log(this.quaternion);
+			console.log(this.quarternion);
 			state.current.orientation.setValue(this.quarternion);
 		});
 	}
