@@ -83,7 +83,7 @@ export class EnginesController implements DroneModule {
 			setTimeout(() => {
 				this.enabled = true;
 				resolve();
-			}, 1100);
+			}, 1400);
 		});
 	}
 

@@ -35,6 +35,7 @@ export class IMU implements DroneModule {
 				this.imu.on("calibration", (calibration: any) => {
 					resolve();
 					if(calibration == 179) {
+						console.log('IMU calibration complete!');
 						this.state.current.calibratedImu.setValue(true);
 					}
 				});
@@ -66,6 +67,11 @@ export class IMU implements DroneModule {
 
 		this.imu.orientation.on("change", function(err:any, data:any) {
 			// TODO: re-map quaternion 90 deg CW
+			console.log("---------------------");
+			console.log("  heading      : ", this.euler.heading);
+			console.log("  roll         : ", this.euler.roll);
+			console.log("  pitch        : ", this.euler.pitch);
+			console.log("---------------------");
 			let q = new CANNON.Quaternion(this.quarternion.x,this.quarternion.y,this.quarternion.z,this.quarternion.w);
 			state.current.orientation.setValue(q);
 		});
