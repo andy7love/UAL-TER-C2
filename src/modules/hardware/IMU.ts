@@ -1,7 +1,9 @@
+/// <reference path="../../../typings/globals/cannon/index.d.ts" />
 import { DroneState } from "../../states/DroneState";
 import { DroneModule } from '../../interfaces/Module'
 import BoardService from "../../services/BoardService";
 import Configuration from '../../services/ConfigurationService';
+let CANNON = require('cannon');
 
 export class IMU implements DroneModule {
 	public name: string = 'Inertial Measurement Unit (IMU)';
