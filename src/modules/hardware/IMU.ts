@@ -90,11 +90,6 @@ export class IMU implements DroneModule {
 			console.log("  isCalibrated : ", this.gyro.isCalibrated);
 			console.log("--------------------------------------");
 
-			console.log("magnetometer");
-			console.log("  heading : ", Math.floor(this.magnetometer.heading));
-			console.log("  bearing : ", this.magnetometer.bearing.name);
-			console.log("--------------------------------------");
-
 			state.current.accelerometer.setValue(new CANNON.Vec3(this.accelerometer.x, this.accelerometer.y, this.accelerometer.z));
 			state.current.gyroscope.setValue(new CANNON.Vec3(this.gyro.x, this.gyro.y, this.gyro.z));
 			state.current.temperature.setValue(this.temperature.celsius);
@@ -102,7 +97,8 @@ export class IMU implements DroneModule {
 
 		this.imu.orientation.on("change", function(err:any, data:any) {
 			console.log(this.quarternion);
-			state.current.orientation.setValue(this.quarternion);
+			let q = new CANNON.Quaternion(this.quarternion.x,this.quarternion.y,this.quarternion.z,this.quarternion.w);
+			state.current.orientation.setValue(q);
 		});
 	}
 }
