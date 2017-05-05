@@ -58,13 +58,7 @@ export class IMU implements DroneModule {
 			}
 		});
 
-		this.imu.on("change", function(data:any) {
-			console.log('change!');
-			console.log('---');
-			//state.current.orientation.setValue(this.quarternion);
-		});
-
-		this.imu.on("data", function(err:any, data:any) {
+		this.imu.on("change", function(err:any, data:any) {
 			console.log('data');
 			console.log("Accelerometer: %d, %d, %d", this.accelerometer.x, this.accelerometer.z, this.accelerometer.z);
 			console.log("Gyro: %d, %d, %d", this.gyro.x, this.gyro.z, this.gyro.z);
@@ -72,7 +66,17 @@ export class IMU implements DroneModule {
 			console.log('---');
 		});
 
-		this.imu.orientation.on("change", function(data:any) {
+		this.imu.on("data", function(err:any, data:any) {
+			/*
+			console.log('data');
+			console.log("Accelerometer: %d, %d, %d", this.accelerometer.x, this.accelerometer.z, this.accelerometer.z);
+			console.log("Gyro: %d, %d, %d", this.gyro.x, this.gyro.z, this.gyro.z);
+			console.log("Temperature: %d", this.temperature.celsius);
+			console.log('---');
+			*/
+		});
+
+		this.imu.orientation.on("change", function(err:any, data:any) {
 			console.log(' orientation: ');
 			console.log("  heading      : ", this.euler.heading);
 			console.log("  roll         : ", this.euler.roll);
