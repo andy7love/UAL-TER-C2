@@ -57,29 +57,22 @@ export class Communication implements DroneModule {
 	}
 
 	private configureStreaming() {
-		this.disposers.push(Bacon.when([
-					this.state.simulation.position.getStream(),
-					this.state.simulation.orientation.getStream().changes(),
-					this.state.current.battery.getStream().changes(),
-					this.state.current.orientation.getStream()
-				],
-				(position: any, orientation: any, battery: any, cOrientation: any) => {
-					return {
-						simulation: {
-							position: position,
-							orientation: orientation
-						},
-						drone: {
-							battery: battery,
-							orientation: cOrientation
-						}
-					}
-				}
-			)
+		let commData = Bacon.combineTemplate({
+			simulation: {
+				position: this.state.simulation.position.getStream(),
+				orientation: this.state.simulation.orientation.getStream()
+			},
+			drone: {
+				battery: this.state.current.battery.getStream(),
+				orientation: this.state.current.orientation.getStream()
+			}
+		});
+
+		this.disposers.push(commData
+			.changes()
 			.skipDuplicates()
 			.skipWhile(this.state.communication.connected.getStream().map(Utils.negate))
 			.onValue((state:any) => {
-				console.log(state);
 				this.connection.sendDataUsingFastChannel(state);
 			}));
 	}
