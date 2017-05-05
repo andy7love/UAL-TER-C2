@@ -65,6 +65,7 @@ export class IMU implements DroneModule {
 
 		this.imu.on("change", function(err:any, data:any) {
 			state.current.accelerometer.setValue({
+				// TODO: re-map vector 90 deg CW
 				vector: new CANNON.Vec3(this.accelerometer.x, this.accelerometer.y, this.accelerometer.z),
 				acceleration: this.accelerometer.acceleration
 			});
@@ -74,6 +75,7 @@ export class IMU implements DroneModule {
 
 		this.imu.orientation.on("change", function(err:any, data:any) {
 			console.log(this.quarternion);
+			// TODO: re-map quaternion 90 deg CW
 			let q = new CANNON.Quaternion(this.quarternion.x,this.quarternion.y,this.quarternion.z,this.quarternion.w);
 			state.current.orientation.setValue(q);
 		});
