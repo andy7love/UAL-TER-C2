@@ -64,37 +64,12 @@ export class IMU implements DroneModule {
 		console.log('setup!!');
 
 		this.imu.on("change", function(err:any, data:any) {
-			console.log("Thermometer");
-			console.log("  celsius      : ", this.thermometer.celsius);
-			console.log("  fahrenheit   : ", this.thermometer.fahrenheit);
-			console.log("  kelvin       : ", this.thermometer.kelvin);
-			console.log("--------------------------------------");
-
-			console.log("Accelerometer");
-			console.log("  x            : ", this.accelerometer.x);
-			console.log("  y            : ", this.accelerometer.y);
-			console.log("  z            : ", this.accelerometer.z);
-			console.log("  pitch        : ", this.accelerometer.pitch);
-			console.log("  roll         : ", this.accelerometer.roll);
-			console.log("  acceleration : ", this.accelerometer.acceleration);
-			console.log("  inclination  : ", this.accelerometer.inclination);
-			console.log("  orientation  : ", this.accelerometer.orientation);
-			console.log("--------------------------------------");
-
-			console.log("Gyroscope");
-			console.log("  x            : ", this.gyro.x);
-			console.log("  y            : ", this.gyro.y);
-			console.log("  z            : ", this.gyro.z);
-			console.log("  pitch        : ", this.gyro.pitch);
-			console.log("  roll         : ", this.gyro.roll);
-			console.log("  yaw          : ", this.gyro.yaw);
-			console.log("  rate         : ", this.gyro.rate);
-			console.log("  isCalibrated : ", this.gyro.isCalibrated);
-			console.log("--------------------------------------");
-
-			state.current.accelerometer.setValue(new CANNON.Vec3(this.accelerometer.x, this.accelerometer.y, this.accelerometer.z));
+			state.current.accelerometer.setValue({
+				vector: new CANNON.Vec3(this.accelerometer.x, this.accelerometer.y, this.accelerometer.z),
+				acceleration: this.accelerometer.acceleration
+			});
 			state.current.gyroscope.setValue(new CANNON.Vec3(this.gyro.x, this.gyro.y, this.gyro.z));
-			state.current.temperature.setValue(this.temperature.celsius);
+			state.current.temperature.setValue(this.thermometer.celsius);
 		});
 
 		this.imu.orientation.on("change", function(err:any, data:any) {

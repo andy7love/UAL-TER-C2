@@ -32,6 +32,14 @@ export class STS implements DroneModule {
 	}
 
 	private configureActions() {
+		this.disposers.push(this.state.current.accelerometer
+			.getStream()
+			.changes()
+			.filter(a => a.acceleration > 9)
+			.onValue((steeringState) => {
+				console.log('collision detected!!');
+			}));
+
 		this.disposers.push(this.state.target.steering
 			.getStream()
 			.changes()

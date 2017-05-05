@@ -2,8 +2,16 @@
 import { StateProperty } from "../helpers/StateProperty";
 let CANNON = require('cannon');
 
-export class AccelerometerState extends StateProperty<CANNON.Vec3> {
+interface AccelerometerStateValue {
+	vector: CANNON.Vec3,
+	acceleration: Number
+}
+
+export class AccelerometerState extends StateProperty<AccelerometerStateValue> {
 	constructor () {
-		super(new CANNON.Vec3(0,0,0));
+		super({
+			vector: new CANNON.Vec3(0,0,0),
+			acceleration: 0
+		});
 	}
 }
