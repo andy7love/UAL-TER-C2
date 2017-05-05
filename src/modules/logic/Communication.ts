@@ -61,7 +61,7 @@ export class Communication implements DroneModule {
 					this.state.simulation.position.getStream(),
 					this.state.simulation.orientation.getStream().changes(),
 					this.state.current.battery.getStream().changes(),
-					this.state.current.orientation.getStream().changes()
+					this.state.current.orientation.getStream()
 				],
 				(position: any, orientation: any, battery: any, cOrientation: any) => {
 					return {
