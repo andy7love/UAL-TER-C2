@@ -32,9 +32,19 @@ export class IMU implements DroneModule {
 					calibrationMask: 48
 				});
 				//console.log(this.imu);
+
 				this.configureActions();
+
+				this.imu.on("calibration", (calibration: any) => {
+					console.log('calibrating...');
+					resolve();
+					if(calibration == 179) {
+						console.log('calibration complete!');
+						this.state.current.calibratedImu.setValue(true);
+					}
+				});
+				
 				console.log('actions ready');
-				resolve();
 			});			
 		});
 	}
@@ -52,14 +62,6 @@ export class IMU implements DroneModule {
 		var state = this.state;
 
 		console.log('setup!!');
-
-		this.imu.on("calibration", (calibration: any) => {
-			console.log('calibrating...');
-			if(calibration == 179) {
-				console.log('calibration complete!');
-				state.current.calibratedImu.setValue(true);
-			}
-		});
 
 		this.imu.on("change", function(err:any, data:any) {
 			console.log("Thermometer");
