@@ -48,7 +48,7 @@ export class STS implements DroneModule {
 			.onValue((steeringState) => {
 				let steeringFactor = 0.03;
 
-				if(steeringState.throttle < 0.1) { 
+				if(steeringState.throttle < 0.01) { 
 					steeringState.throttle = 0;
 					steeringFactor = 0;
 				}

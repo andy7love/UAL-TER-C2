@@ -106,10 +106,12 @@ export class EnginesController implements DroneModule {
 				.changes()
 				.onValue((enginesState) => {
 					if(this.enabled) {
+						/*
 						this.escs.fl.speed(enginesState.fl.throttle*100);
 						this.escs.fr.speed(enginesState.fr.throttle*100);
 						this.escs.bl.speed(enginesState.bl.throttle*100);
 						this.escs.br.speed(enginesState.br.throttle*100);
+						*/
 					}
 				}));
 
