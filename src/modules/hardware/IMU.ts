@@ -1,6 +1,7 @@
 /// <reference path="../../../typings/globals/cannon/index.d.ts" />
 import { DroneState } from "../../states/DroneState";
-import { DroneModule } from '../../interfaces/Module'
+import { DroneModule } from '../../interfaces/Module';
+import { Utils } from '../../helpers/Utils';
 import BoardService from "../../services/BoardService";
 import Configuration from '../../services/ConfigurationService';
 let CANNON = require('cannon');
@@ -72,8 +73,12 @@ export class IMU implements DroneModule {
 			console.log("  roll         : ", this.euler.roll);
 			console.log("  pitch        : ", this.euler.pitch);
 			console.log("---------------------");
+			
 			let q = new CANNON.Quaternion(this.quarternion.x,this.quarternion.y,this.quarternion.z,this.quarternion.w);
-			state.current.orientation.setValue(q);
+			let rot = new CANNON.Quaternion();
+			rot.setFromAxisAngle(new CANNON.Vec3(0,1,0), Utils.toRadians(90));
+			let qp = rot.mult(q);
+			state.current.orientation.setValue(qp);
 		});
 	}
 }

@@ -16,4 +16,12 @@ export class Utils {
         }
         return target;
     }
+
+    public static toRadians = (degrees: any): Number => {
+        return degrees * Math.PI / 180 
+    }
+    
+    public static toDegrees = (radians: any): Number => {
+        return radians * 180 / Math.PI 
+    }
 }
