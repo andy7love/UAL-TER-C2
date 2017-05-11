@@ -32,7 +32,7 @@ export class STS implements DroneModule {
 	}
 
 	private configureActions() {
-		// MOVE THIS TO ANOTHER MODULE.
+		// TODO: MOVE THIS TO ANOTHER MODULE.
 		this.disposers.push(this.state.current.accelerometer
 			.getStream()
 			.changes()
@@ -47,6 +47,11 @@ export class STS implements DroneModule {
 			.changes()
 			.onValue((steeringState) => {
 				let steeringFactor = 0.03;
+
+				if(steeringState.throttle < 0.01) { 
+					steeringState.throttle = 0;
+					steeringFactor = 0;
+				}
 
 				this.state.target.engines.setValue({
 					fl: {
