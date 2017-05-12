@@ -77,7 +77,7 @@ export class IMU implements DroneModule {
 			let q = new CANNON.Quaternion();
 			let rot = new CANNON.Quaternion();
 
-			rot.set(this.quarternion.x,this.quarternion.z,this.quarternion.y,this.quarternion.w);
+			rot.set(this.quarternion.x,this.quarternion.y,this.quarternion.z,this.quarternion.w);
 			q = q.mult(rot);
 
 			rot.setFromAxisAngle(new CANNON.Vec3(0,0,1), Utils.toRadians(90));
