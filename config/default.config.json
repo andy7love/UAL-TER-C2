@@ -11,7 +11,7 @@
         "voltageStore": 11.4
     },
     "motors": {
-        "pwmRange": [2000, 950],
+        "pwmRange": [2000, 1000],
         "board": 0,
         "pins": {
             "fl": 5,
