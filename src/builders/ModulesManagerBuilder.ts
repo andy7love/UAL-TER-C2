@@ -8,7 +8,7 @@ export class ModulesManagerBuilder {
 
     public static BuildHardwareModules(moduleMgr: ModulesManager) {
         moduleMgr.loadModule('hardware/EnginesController');
-        moduleMgr.loadModule('hardware/IMU');
+        //moduleMgr.loadModule('hardware/IMU');
     }
 
     public static BuildSimulationModules(moduleMgr: ModulesManager) {
