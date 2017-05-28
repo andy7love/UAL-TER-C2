@@ -75,11 +75,11 @@ export class IMU implements DroneModule {
 			q = q.mult(rot);
 			//q = q.inverse();
 
-			rot.setFromAxisAngle(new CANNON.Vec3(0,1,0), Utils.toRadians(180));
-			q = q.mult(rot);
+			// rot.setFromAxisAngle(new CANNON.Vec3(0,1,0), Utils.toRadians(180));
+			// q = q.mult(rot);
 
-			rot.setFromAxisAngle(new CANNON.Vec3(0,0,1), Utils.toRadians(90));
-			q = q.mult(rot);
+			// rot.setFromAxisAngle(new CANNON.Vec3(0,0,1), Utils.toRadians(90));
+			// q = q.mult(rot);
 
 			state.current.orientation.setValue(q);
 		});
