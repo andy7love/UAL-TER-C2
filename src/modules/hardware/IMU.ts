@@ -73,6 +73,7 @@ export class IMU implements DroneModule {
 
 			rot.set(this.quarternion.x,this.quarternion.y,this.quarternion.z,this.quarternion.w);
 			q = q.mult(rot);
+			q = q.inverse();
 
 			// rot.setFromAxisAngle(new CANNON.Vec3(0,1,0), Utils.toRadians(-90));
 			// q = q.mult(rot);
