@@ -5,7 +5,7 @@ let chalk: any = require('chalk');
 export class ModulesManager {
     private state: DroneState;
     private modules: Array<DroneModule> = [];
-    private moduleInitializationTimeout = 5000;
+    private moduleInitializationTimeout = 10000;
 
     constructor(state: DroneState) {
         this.state = state;
