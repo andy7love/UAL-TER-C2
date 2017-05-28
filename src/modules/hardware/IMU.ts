@@ -68,20 +68,25 @@ export class IMU implements DroneModule {
 
 		this.imu.orientation.on("change", function(err:any, data:any) {
 			// TODO: re-map quaternion 90 deg CW
-			let q = new CANNON.Quaternion();
-			let rot = new CANNON.Quaternion();
+			try {
+				let q = new CANNON.Quaternion();
+				let rot = new CANNON.Quaternion();
 
-			rot.set(this.quarternion.x,this.quarternion.y,this.quarternion.z,this.quarternion.w);
-			q = q.mult(rot);
-			//q = q.inverse();
+				rot.set(this.quarternion.x,this.quarternion.y,this.quarternion.z,this.quarternion.w);
+				q = q.mult(rot);
+				//q = q.inverse();
 
-			// rot.setFromAxisAngle(new CANNON.Vec3(0,1,0), Utils.toRadians(-90));
-			// q = q.mult(rot);
+				// rot.setFromAxisAngle(new CANNON.Vec3(0,1,0), Utils.toRadians(-90));
+				// q = q.mult(rot);
 
-			// rot.setFromAxisAngle(new CANNON.Vec3(0,0,1), Utils.toRadians(90));
-			// q = q.mult(rot);
+				// rot.setFromAxisAngle(new CANNON.Vec3(0,0,1), Utils.toRadians(90));
+				// q = q.mult(rot);
 
-			state.current.orientation.setValue(rot);
+				state.current.orientation.setValue(rot);
+			} catch(e) {
+				console.log('warning error!');
+				console.log(e);
+			}
 		});
 	}
 }
