@@ -5,6 +5,7 @@ let chalk: any = require('chalk');
 export class ModulesManager {
     private state: DroneState;
     private modules: Array<DroneModule> = [];
+    private moduleInitializationTimeout = 5000;
 
     constructor(state: DroneState) {
         this.state = state;
@@ -92,13 +93,29 @@ export class ModulesManager {
 
             let checkModule = () => {
                 let m = this.modules[i];
+
+                let timeout = setTimeout(() => {
+                    onFail(m, 'Timeout - No response.');
+                    next();
+                    timeout = null;
+                }, this.moduleInitializationTimeout);
+
                 m.enable().then(() => {
-                    onSuccessfull(m);
-                    next();
+                    if(timeout !== null) {
+                        onSuccessfull(m);
+                        next();
+                        clearTimeout(timeout);
+                        timeout = null;
+                    }
                 }, (message: string) => {
-                    onFail(m, message);
-                    next();
+                    if(timeout !== null) {
+                        onFail(m, message);
+                        next();
+                        clearTimeout(timeout);
+                        timeout = null;
+                    }
                 });
+
             };
             
             checkModule();
