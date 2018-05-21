@@ -1,6 +1,5 @@
-/// <reference path="../../typings/globals/cannon/index.d.ts" />
 import { StateProperty } from "../helpers/StateProperty";
-let CANNON = require('cannon');
+import * as CANNON from 'cannon';
 
 interface AccelerometerStateValue {
 	vector: CANNON.Vec3,

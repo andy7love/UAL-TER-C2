@@ -1,10 +1,9 @@
-/// <reference path="../../../typings/globals/cannon/index.d.ts" />
 import { DroneState } from "../../states/DroneState";
 import { DroneModule } from '../../interfaces/Module';
 import { Utils } from '../../helpers/Utils';
 import BoardService from "../../services/BoardService";
 import Configuration from '../../services/ConfigurationService';
-let CANNON = require('cannon');
+import * as CANNON from "cannon";
 
 export class IMU implements DroneModule {
 	public name: string = 'Inertial Measurement Unit (IMU)';
@@ -40,7 +39,7 @@ export class IMU implements DroneModule {
 						this.state.current.calibratedImu.setValue(true);
 					}
 				});
-			});			
+			});
 		});
 	}
 

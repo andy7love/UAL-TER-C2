@@ -1,6 +1,5 @@
 import { DroneState } from "../../states/DroneState";
 import { DroneModule } from '../../interfaces/Module'
-let CANNON = require('cannon');
 
 export class STS implements DroneModule {
 	public name: string = 'Steering Translation System (STS)';
@@ -48,14 +47,14 @@ export class STS implements DroneModule {
 			.onValue((steeringState) => {
 				let steeringFactor = 0.03;
 
-				if(steeringState.throttle < 0.01) { 
+				if(steeringState.throttle < 0.01) {
 					steeringState.throttle = 0;
 					steeringFactor = 0;
 				}
 
 				this.state.target.engines.setValue({
 					fl: {
-						throttle: (steeringState.pitch + steeringState.roll - steeringState.yaw) * steeringFactor + steeringState.throttle   
+						throttle: (steeringState.pitch + steeringState.roll - steeringState.yaw) * steeringFactor + steeringState.throttle
 					},
 					fr: {
 						throttle: (steeringState.pitch - steeringState.roll + steeringState.yaw) * steeringFactor + steeringState.throttle

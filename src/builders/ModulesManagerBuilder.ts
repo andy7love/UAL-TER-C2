@@ -3,7 +3,7 @@ import { DroneState } from '../states/DroneState';
 
 export class ModulesManagerBuilder {
     constructor() {
-        
+
     }
 
     public static BuildHardwareModules(moduleMgr: ModulesManager) {

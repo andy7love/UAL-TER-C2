@@ -1,6 +1,6 @@
 import { DroneModule } from '../interfaces/Module'
 import { DroneState } from "../states/DroneState";
-let chalk: any = require('chalk');
+import chalk from "chalk";
 
 export class ModulesManager {
     private state: DroneState;
@@ -55,6 +55,10 @@ export class ModulesManager {
         });
     }
 
+    public logStatus(status: string, message: string) {
+        console.log(chalk.white('[ ') + status + chalk.white(' ] ') + chalk.white(message));
+    }
+
     public enableAll(): Promise<string> {
         console.log(chalk.inverse("Initializing Modules"));
 
@@ -63,21 +67,21 @@ export class ModulesManager {
             let fails = 0;
 
             let onSuccessfull = (m: DroneModule) => {
-                console.log('[ ' + chalk.green("DONE") + ' ] ' + m.name);
+                this.logStatus(chalk.green('DONE'), m.name);
             };
 
             let onFail = (m: DroneModule, message: string) => {
                 fails++;
-                console.log('[ ' + chalk.red("FAIL") + ' ] ' + m.name);
+                this.logStatus(chalk.red('FAIL'), m.name);
                 console.log(chalk.magenta(message));
             };
 
             let onEnd = () => {
                 if(fails === 0) {
-                    console.log('[ ' + chalk.green("ONLINE") + ' ] ' + 'All modules successfully initialized.');
+                    this.logStatus(chalk.blue('ONLINE'), 'All modules successfully initialized.');
                     resolve();
                 } else {
-                    console.log('[ ' + chalk.red("ERROR") + ' ] ' + fails + ' modules failed during initialization.');
+                    this.logStatus(chalk.red('ERROR'), fails + ' modules failed during initialization.');
                     reject();
                 }
             };
@@ -117,7 +121,7 @@ export class ModulesManager {
                 });
 
             };
-            
+
             checkModule();
         });
     }
@@ -130,7 +134,7 @@ export class ModulesManager {
         for(let i = (this.modules.length-1); i >= 0; i--) {
             let promise = this.modules[i].disable();
             promise.catch((message) => {
-                console.log('[ ' + chalk.red("ERROR") + ' ] ' + this.modules[i].name);
+                this.logStatus(chalk.red('ERROR'), this.modules[i].name);
                 console.log(chalk.magenta(message));
             });
             promises.push(promise);
@@ -139,9 +143,9 @@ export class ModulesManager {
         console.log(chalk.grey("Shutdown command was sent to all modules."));
 
         return Promise.all(promises).then(() => {
-            console.log('[ ' + chalk.grey("SHUTDOWN") + ' ] ' + 'All modules successfully disabled.');
+            this.logStatus(chalk.grey('SHUTDOWN'), 'All modules successfully disabled.');
         }, () => {
-            console.log('[ ' + chalk.red("SHUTDOWN FAILED") + ' ] ' + 'Some modules failed during shutdown.');
+            this.logStatus(chalk.red('SHUTDOWN FAILED'), 'Some modules has failed during shutdown.');
         });
     }
 }

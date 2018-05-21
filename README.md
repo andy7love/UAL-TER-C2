@@ -6,6 +6,14 @@ Unmanned Aircraft Life - Terminal C2
 
 Drone software written in NodeJS with Johnny-Five using Raspberry Pi 3 and Arduino.
 
+### Run and Setup
+
+- `npm install`
+- `npm run dev` (for build and run)
+- `npm start` (for re-run a previous build)
+
+**Note:** Works on Node v.8.9.1
+
 ### More info
 
 Communication with client using UDP+TCP with a relay server using WebRTC.

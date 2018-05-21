@@ -1,5 +1,4 @@
-/// <reference path="../../typings/globals/underscore/index.d.ts" />
-let _: UnderscoreStatic = require('underscore');
+import { UnderscoreStatic } from "underscore";
 
 export class Utils {
     public static negate(value: boolean): boolean {
@@ -18,10 +17,10 @@ export class Utils {
     }
 
     public static toRadians = (degrees: any): Number => {
-        return degrees * Math.PI / 180 
+        return degrees * Math.PI / 180
     }
-    
+
     public static toDegrees = (radians: any): Number => {
-        return radians * 180 / Math.PI 
+        return radians * 180 / Math.PI
     }
 }

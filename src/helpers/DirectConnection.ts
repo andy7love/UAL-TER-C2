@@ -1,4 +1,3 @@
-/// <reference path="../../typings/globals/socket.io-client/index.d.ts" />
 import * as net from 'net';
 import * as dgram from 'dgram';
 import Configuration from '../services/ConfigurationService';
@@ -12,11 +11,11 @@ interface DirectConnectionSettings {
 }
 
 export class DirectConnection {
-    // Enable this when start using LTE-4G-3G connections. 
+    // Enable this when start using LTE-4G-3G connections.
     private signalingServerURL: string = 'http://localhost:8080';
     private socket:SocketIOClient.Socket;
     // ----------------------------------------------------
-    
+
     private settings: DirectConnectionSettings;
     private jsonSocket: any = null;
     private hostname: string =  Configuration.communication.hostname;
@@ -38,11 +37,11 @@ export class DirectConnection {
 
     public connect(): void {
         // Enable this when start using LTE-4G-3G connections.
-        // Can be used for NAT 
+        // Can be used for NAT
         //this.socket = require('socket.io-client')(this.signalingServerURL);
         //----------------------------------------------------------------------
 
-        this.createReliableDataChannel(); 
+        this.createReliableDataChannel();
         this.createFastDataChannel();
     }
 
@@ -53,7 +52,7 @@ export class DirectConnection {
     private createReliableDataChannel() {
         this.tcpServer = net.createServer((socket:net.Socket) => {
             socket.setKeepAlive(true, 0);
-                  
+
             socket.on("error", (error:any) => {
                 if(	error.code != 'ECONNREFUSED' &&
                     error.code != 'ECONNRESET' ) {
@@ -101,7 +100,7 @@ export class DirectConnection {
 
         console.log('client disconnected');
         this.handleReliableChannelStateChange();
-    } 
+    }
 
     private createFastDataChannel() {
         this.udpServer = dgram.createSocket('udp4');
@@ -115,7 +114,7 @@ export class DirectConnection {
             this.udpClientAddress = remote.address;
             this.udpClientPort = remote.port;
 
-            this.receiveMessage(JSON.parse(message.toString())); 
+            this.receiveMessage(JSON.parse(message.toString()));
         });
 
         this.udpServer.bind(this.udpPort, this.hostname);

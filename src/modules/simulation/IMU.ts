@@ -1,6 +1,5 @@
 import { DroneState } from "../../states/DroneState";
 import { DroneModule } from '../../interfaces/Module'
-let CANNON = require('cannon');
 
 export class IMU implements DroneModule {
 	public name: string = 'Inertial Measurement Unit (IMU)';

@@ -1,5 +1,4 @@
-/// <reference path="../../typings/globals/baconjs/index.d.ts" />
-let Bacon = require('baconjs');
+import * as Bacon from "baconjs";
 
 interface StateError {
     error: string;
