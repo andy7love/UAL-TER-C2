@@ -6,8 +6,9 @@
   "scripts": {
     "start": "node build/index",
     "check": "node build/index check",
-    "dev": "gulp && node build/index",
+    "dev": "npm run lint && gulp && node build/index",
     "dev-check": "gulp && node build/index check",
+    "lint": "tslint -p tslint.json",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -40,6 +41,7 @@
     "johnny-five": "^0.10.0",
     "json-socket": "^0.2.1",
     "socket.io-client": "^1.5.1",
+    "tslint": "^5.10.0",
     "typescript": "^2.8.3",
     "underscore": "^1.8.3"
   },
@@ -50,7 +52,6 @@
   },
   "devDependencies": {
     "@types/baconjs": "^0.7.33",
-    "@types/cannon": "^0.1.2",
     "@types/johnny-five": "0.0.36",
     "@types/node": "^8.0.53",
     "@types/socket.io-client": "^1.4.32",

@@ -1,14 +1,13 @@
-import { DroneState } from "../../states/DroneState";
-import { DroneModule } from '../../interfaces/Module'
+import { DroneState } from '../../states/DroneState';
+import { IDroneModule } from '../../interfaces/Module';
+import { EnginePosiions } from '../../states/EnginesState';
+import { ISteeringValue } from '../../states/SteeringState';
 
-export class STS implements DroneModule {
+export class STS implements IDroneModule {
 	public name: string = 'Steering Translation System (STS)';
 	private state: DroneState;
 	private disposers: Array<any> = [];
-
-	constructor () {
-
-	}
+	private steeringFactor: number = 0.05;
 
 	public setState(state: DroneState) {
 		this.state = state;
@@ -36,7 +35,7 @@ export class STS implements DroneModule {
 			.getStream()
 			.changes()
 			.filter(a => a.acceleration > 15)
-			.onValue((steeringState) => {
+			.onValue(steeringState => {
 				console.log('collision detected!!');
 			}));
 		// ----------------------------------
@@ -44,28 +43,43 @@ export class STS implements DroneModule {
 		this.disposers.push(this.state.target.steering
 			.getStream()
 			.changes()
-			.onValue((steeringState) => {
-				let steeringFactor = 0.03;
-
-				if(steeringState.throttle < 0.01) {
-					steeringState.throttle = 0;
-					steeringFactor = 0;
-				}
-
+			.onValue(steeringState => {
 				this.state.target.engines.setValue({
 					fl: {
-						throttle: (steeringState.pitch + steeringState.roll - steeringState.yaw) * steeringFactor + steeringState.throttle
+						throttle: this.getEngineThrottle(EnginePosiions.frontLeft, steeringState)
 					},
 					fr: {
-						throttle: (steeringState.pitch - steeringState.roll + steeringState.yaw) * steeringFactor + steeringState.throttle
+						throttle: this.getEngineThrottle(EnginePosiions.frontRight, steeringState)
 					},
 					bl: {
-						throttle: (-steeringState.pitch + steeringState.roll + steeringState.yaw) * steeringFactor + steeringState.throttle
+						throttle: this.getEngineThrottle(EnginePosiions.backLeft, steeringState)
 					},
 					br: {
-						throttle: (-steeringState.pitch - steeringState.roll - steeringState.yaw) * steeringFactor + steeringState.throttle
+						throttle: this.getEngineThrottle(EnginePosiions.backRight, steeringState)
 					}
 				});
 			}));
+	}
+
+	private getEngineThrottle(enginePosition: EnginePosiions, steeringState: ISteeringValue): number {
+		if (steeringState.throttle < 0.01) {
+			return 0;
+		}
+
+		const steeringThrottle = this.getEngineSteeringThrottle(enginePosition, steeringState);
+		return (steeringThrottle * this.steeringFactor) + steeringState.throttle;
+	}
+
+	private getEngineSteeringThrottle(enginePosition: EnginePosiions, steeringState: ISteeringValue) {
+		switch (enginePosition) {
+			case EnginePosiions.frontLeft:
+				return steeringState.pitch + steeringState.roll - steeringState.yaw;
+			case EnginePosiions.frontRight:
+				return steeringState.pitch - steeringState.roll + steeringState.yaw;
+			case EnginePosiions.backLeft:
+				return -steeringState.pitch + steeringState.roll + steeringState.yaw;
+			case EnginePosiions.backRight:
+				return -steeringState.pitch - steeringState.roll - steeringState.yaw;
+		}
 	}
 }

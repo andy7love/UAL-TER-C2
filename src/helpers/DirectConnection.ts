@@ -2,164 +2,165 @@ import * as net from 'net';
 import * as dgram from 'dgram';
 import Configuration from '../services/ConfigurationService';
 
-interface DirectConnectionSettings {
-    events: {
-        readyToSend: (ready: boolean) => void,
-        started: () => void,
-        messageReceived: (data: any) => void
-    }
+interface IDirectConnectionSettings {
+	events: {
+		readyToSend: (ready: boolean) => void,
+		started: () => void,
+		messageReceived: (data: any) => void
+	};
 }
 
 export class DirectConnection {
-    // Enable this when start using LTE-4G-3G connections.
-    private signalingServerURL: string = 'http://localhost:8080';
-    private socket:SocketIOClient.Socket;
-    // ----------------------------------------------------
+	// Enable this when start using LTE-4G-3G connections.
+	private signalingServerURL: string = 'http://localhost:8080';
+	private socket: SocketIOClient.Socket;
+	// ----------------------------------------------------
 
-    private settings: DirectConnectionSettings;
-    private jsonSocket: any = null;
-    private hostname: string =  Configuration.communication.hostname;
+	private settings: IDirectConnectionSettings;
+	private jsonSocket: any = null;
+	private hostname: string = Configuration.communication.hostname;
 
-    private tcpPort: number = Configuration.communication.tcpPort;
-    private tcpServer: net.Server = null;
-    private tcpSockets: Array<net.Socket> = [];
-    private tcpJsonSocket: any = null;
+	private tcpPort: number = Configuration.communication.tcpPort;
+	private tcpServer: net.Server = null;
+	private tcpSockets: Array<net.Socket> = [];
+	private tcpJsonSocket: any = null;
 
-    private udpServer: dgram.Socket;
-    private udpPort: number = Configuration.communication.udpPort;
-    private udpClientAddress: string = null;
-    private udpClientPort: number = null;
+	private udpServer: dgram.Socket;
+	private udpPort: number = Configuration.communication.udpPort;
+	private udpClientAddress: string = null;
+	private udpClientPort: number = null;
 
-    constructor(settings: DirectConnectionSettings) {
-        this.settings = settings;
-        this.jsonSocket = require('json-socket');
-    }
+	constructor(settings: IDirectConnectionSettings) {
+		this.settings = settings;
+		this.jsonSocket = require('json-socket');
+	}
 
-    public connect(): void {
-        // Enable this when start using LTE-4G-3G connections.
-        // Can be used for NAT
-        //this.socket = require('socket.io-client')(this.signalingServerURL);
-        //----------------------------------------------------------------------
+	public connect(): void {
+		// Enable this when start using LTE-4G-3G connections.
+		// Can be used for NAT
+		// this.socket = require('socket.io-client')(this.signalingServerURL);
+		// ----------------------------------------------------------------------
 
-        this.createReliableDataChannel();
-        this.createFastDataChannel();
-    }
+		this.createReliableDataChannel();
+		this.createFastDataChannel();
+	}
 
-    public disconnect() {
-        this.closeConnection();
-    }
+	public disconnect() {
+		this.closeConnection();
+	}
 
-    private createReliableDataChannel() {
-        this.tcpServer = net.createServer((socket:net.Socket) => {
-            socket.setKeepAlive(true, 0);
+	public isReadyToSend(): boolean {
+		return this.tcpSockets.length > 0;
+	}
 
-            socket.on("error", (error:any) => {
-                if(	error.code != 'ECONNREFUSED' &&
-                    error.code != 'ECONNRESET' ) {
-                    console.log('TCP ERROR: ', error);
-                }
-            });
+	public sendDataUsingReliableChannel(data: any) {
+		if (this.isReadyToSend()) {
+			this.tcpJsonSocket.sendMessage(data);
+		}
+	}
 
-            socket.on('close', (had_error) => {
-                console.log('closed connection');
-                this.disconnectFromClient(socket);
-            });
+	public sendDataUsingFastChannel(data: any) {
+		if (this.isReadyToSend() && this.udpClientAddress && this.udpClientPort) {
+			const buff = new Buffer(JSON.stringify(data));
+			this.udpServer.send(buff, 0, buff.length, this.udpClientPort, this.udpClientAddress);
+		}
+	}
 
-            socket.on('end', () => {
-                console.log('ended connection');
-                this.disconnectFromClient(socket);
-            });
+	private createReliableDataChannel() {
+		this.tcpServer = net.createServer((socket: net.Socket) => {
+			socket.setKeepAlive(true, 0);
 
-            this.connectToClient(socket);
-        });
+			socket.on('error', (error: any) => {
+				if (error.code !== 'ECONNREFUSED' &&
+					error.code !== 'ECONNRESET') {
+					console.log('TCP ERROR: ', error);
+				}
+			});
 
-        this.tcpServer.on('error', (err:any) => {
-            console.log('error on tcp server!', err);
-        });
+			socket.on('close', hadError => {
+				console.log('closed connection');
+				this.disconnectFromClient(socket);
+			});
 
-        this.tcpServer.listen(this.tcpPort, this.hostname, () => {
-            console.log('TCP Server is listening on port', this.tcpPort);
-            this.settings.events.started();
-        });
-    }
+			socket.on('end', () => {
+				console.log('ended connection');
+				this.disconnectFromClient(socket);
+			});
 
-    private connectToClient(socket: net.Socket) {
-        this.tcpJsonSocket = new this.jsonSocket(socket);
-        this.tcpJsonSocket.on('message', (data:any) => {
-            this.receiveMessage(data);
-        });
-        this.tcpSockets.push(socket);
-        console.log('client connected!');
-        this.handleReliableChannelStateChange();
-    }
+			this.connectToClient(socket);
+		});
 
-    private disconnectFromClient(socket: net.Socket) {
-        var i = this.tcpSockets.indexOf(socket);
-        if (i > -1)
-            this.tcpSockets.splice(i, 1);
+		this.tcpServer.on('error', (err: any) => {
+			console.log('error on tcp server!', err);
+		});
 
-        console.log('client disconnected');
-        this.handleReliableChannelStateChange();
-    }
+		this.tcpServer.listen(this.tcpPort, this.hostname, () => {
+			console.log('TCP Server is listening on port', this.tcpPort);
+			this.settings.events.started();
+		});
+	}
 
-    private createFastDataChannel() {
-        this.udpServer = dgram.createSocket('udp4');
+	private connectToClient(socket: net.Socket) {
+		this.tcpJsonSocket = new this.jsonSocket(socket);
+		this.tcpJsonSocket.on('message', (data: any) => {
+			this.receiveMessage(data);
+		});
+		this.tcpSockets.push(socket);
+		console.log('client connected!');
+		this.handleReliableChannelStateChange();
+	}
 
-        this.udpServer.on('listening', () => {
-            var address = this.udpServer.address();
-            console.log('UDP Server listening on ' + address.address + ":" + address.port);
-        });
+	private disconnectFromClient(socket: net.Socket) {
+		const i = this.tcpSockets.indexOf(socket);
+		if (i > -1) {
+			this.tcpSockets.splice(i, 1);
+		}
 
-        this.udpServer.on('message', (message, remote) => {
-            this.udpClientAddress = remote.address;
-            this.udpClientPort = remote.port;
+		console.log('client disconnected');
+		this.handleReliableChannelStateChange();
+	}
 
-            this.receiveMessage(JSON.parse(message.toString()));
-        });
+	private createFastDataChannel() {
+		this.udpServer = dgram.createSocket('udp4');
 
-        this.udpServer.bind(this.udpPort, this.hostname);
-    }
+		this.udpServer.on('listening', () => {
+			const address = this.udpServer.address();
+			console.log('UDP Server listening on ' + address.address + ':' + address.port);
+		});
 
-    private receiveMessage(data: any) {
-        this.settings.events.messageReceived(data);
-    }
+		this.udpServer.on('message', (message, remote) => {
+			this.udpClientAddress = remote.address;
+			this.udpClientPort = remote.port;
 
-    private handleReliableChannelStateChange() {
-        let readyToSend = this.isReadyToSend();
-        this.settings.events.readyToSend(readyToSend);
-    }
+			this.receiveMessage(JSON.parse(message.toString()));
+		});
 
-    public isReadyToSend(): boolean {
-        return this.tcpSockets.length > 0;
-    }
+		this.udpServer.bind(this.udpPort, this.hostname);
+	}
 
-    public sendDataUsingReliableChannel(data: any) {
-        if(this.isReadyToSend()) {
-            this.tcpJsonSocket.sendMessage(data);
-        }
-    }
+	private receiveMessage(data: any) {
+		this.settings.events.messageReceived(data);
+	}
 
-    public sendDataUsingFastChannel(data: any) {
-        if(this.isReadyToSend() && this.udpClientAddress && this.udpClientPort) {
-            var buff = new Buffer(JSON.stringify(data));
-            this.udpServer.send(buff, 0, buff.length, this.udpClientPort, this.udpClientAddress);
-        }
-    }
+	private handleReliableChannelStateChange() {
+		const readyToSend = this.isReadyToSend();
+		this.settings.events.readyToSend(readyToSend);
+	}
 
-    private closeConnection() {
-        this.tcpServer.close();
-        this.tcpServer.removeAllListeners();
+	private closeConnection() {
+		this.tcpServer.close();
+		this.tcpServer.removeAllListeners();
 
-        this.tcpSockets.forEach((socket) => {
-            socket.removeAllListeners();
-            socket.end();
-        });
-        this.tcpSockets = [];
+		this.tcpSockets.forEach(socket => {
+			socket.removeAllListeners();
+			socket.end();
+		});
+		this.tcpSockets = [];
 
-        this.udpServer.removeAllListeners();
-        this.udpServer.close();
-        this.udpServer.unref();
+		this.udpServer.removeAllListeners();
+		this.udpServer.close();
+		this.udpServer.unref();
 
-        this.handleReliableChannelStateChange();
-    }
+		this.handleReliableChannelStateChange();
+	}
 }

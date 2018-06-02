@@ -1,14 +1,10 @@
-import { DroneState } from "../../states/DroneState";
-import { DroneModule } from '../../interfaces/Module'
+import { DroneState } from '../../states/DroneState';
+import { IDroneModule } from '../../interfaces/Module';
 
-export class IMU implements DroneModule {
+export class IMU implements IDroneModule {
 	public name: string = 'Inertial Measurement Unit (IMU)';
 	private state: DroneState;
 	private disposers: Array<any> = [];
-
-	constructor () {
-
-	}
 
 	public setState(state: DroneState) {
 		this.state = state;
@@ -31,11 +27,11 @@ export class IMU implements DroneModule {
 	}
 
 	private configureActions() {
-        this.disposers.push(this.state.simulation.orientation
-            .getStream()
-            .changes()
-            .onValue((simulationOrientationState) => {
-                this.state.current.orientation.setValue(simulationOrientationState.clone());
-            }));
+		this.disposers.push(this.state.simulation.orientation
+			.getStream()
+			.changes()
+			.onValue(simulationOrientationState => {
+				this.state.current.orientation.setValue(simulationOrientationState.clone());
+			}));
 	}
 }

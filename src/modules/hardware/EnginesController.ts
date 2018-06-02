@@ -1,9 +1,9 @@
-import { DroneState } from "../../states/DroneState";
-import { DroneModule } from "../../interfaces/Module";
+import { DroneState } from '../../states/DroneState';
+import { IDroneModule } from '../../interfaces/Module';
 import Configuration from '../../services/ConfigurationService';
-import BoardService from "../../services/BoardService";
+import BoardService from '../../services/BoardService';
 
-export class EnginesController implements DroneModule {
+export class EnginesController implements IDroneModule {
 	public name: string = 'Engines Controller';
 	private state: DroneState;
 	private disposers: Array<any> = [];
@@ -15,18 +15,14 @@ export class EnginesController implements DroneModule {
 		br: any
 	};
 
-	constructor () {
-
-	}
-
 	public setState(state: DroneState) {
 		this.state = state;
 	}
 
 	public enable(): Promise<string> {
 		return this.configureMotors()
-				.then(this.armMotors.bind(this))
-				.then(this.configureActions.bind(this));
+			.then(this.armMotors.bind(this))
+			.then(this.configureActions.bind(this));
 	}
 
 	public disable(): Promise<string> {
@@ -42,16 +38,16 @@ export class EnginesController implements DroneModule {
 	}
 
 	private configureESC(pin: number) {
-		let five: any = require("johnny-five");
+		const five: any = require('johnny-five');
 		return new five.ESC({
 			pwmRange: Configuration.motors.pwmRange,
-			pin: pin
+			pin
 		});
 	}
 
 	private configureMotors(): Promise<string> {
 		return new Promise<string>((resolve, reject) => {
-			BoardService.getBoard(Configuration.motors.board).then((board) => {
+			BoardService.getBoard(Configuration.motors.board).then(board => {
 				this.escs = {
 					fl: this.configureESC(Configuration.motors.pins.fl),
 					fr: this.configureESC(Configuration.motors.pins.fr),
@@ -89,7 +85,7 @@ export class EnginesController implements DroneModule {
 
 	private disarmMotors(): Promise<string> {
 		return new Promise<string>((resolve, reject) => {
-			if(this.enabled) {
+			if (this.enabled) {
 				this.escs.fl.speed(0);
 				this.escs.fr.speed(0);
 				this.escs.bl.speed(0);
@@ -104,12 +100,12 @@ export class EnginesController implements DroneModule {
 			this.disposers.push(this.state.target.engines
 				.getStream()
 				.changes()
-				.onValue((enginesState) => {
-					if(this.enabled) {
-						this.escs.fl.speed(enginesState.fl.throttle*100);
-						this.escs.fr.speed(enginesState.fr.throttle*100);
-						this.escs.bl.speed(enginesState.bl.throttle*100);
-						this.escs.br.speed(enginesState.br.throttle*100);
+				.onValue(enginesState => {
+					if (this.enabled) {
+						this.escs.fl.speed(enginesState.fl.throttle * 100);
+						this.escs.fr.speed(enginesState.fr.throttle * 100);
+						this.escs.bl.speed(enginesState.bl.throttle * 100);
+						this.escs.br.speed(enginesState.br.throttle * 100);
 					}
 				}));
 

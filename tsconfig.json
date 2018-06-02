@@ -1,9 +1,16 @@
 {
   "compilerOptions": {
 		"noImplicitAny": true,
-		"baseUrl": "./node_modules",
 		"module": "commonjs",
-		"target": "es6"
+		"target": "es6",
+		"baseUrl": ".",
+		"paths": {
+		  "*": [
+			"./typings/*",
+			"./node_modules/@types/*",
+			"./src/*"
+		  ]
+		}
   },
 	"exclude": [
 			"node_modules"

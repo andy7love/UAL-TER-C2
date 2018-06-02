@@ -1,11 +1,11 @@
-import { StateProperty } from "../helpers/StateProperty";
+import { StateProperty } from '../helpers/StateProperty';
 
-interface DCSensorStateValue {
-	voltage: number
+interface IDCSensorStateValue {
+	voltage: number;
 }
 
-export class DCSensorState extends StateProperty<DCSensorStateValue> {
-	constructor () {
+export class DCSensorState extends StateProperty<IDCSensorStateValue> {
+	constructor() {
 		super({
 			voltage: 0
 		});
