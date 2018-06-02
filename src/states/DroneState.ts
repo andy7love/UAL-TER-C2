@@ -1,41 +1,41 @@
-import { CommunicationState } from "./CommunicationState";
-import { SteeringState } from "./SteeringState";
-import { OrientationState } from "./OrientationState";
-import { AccelerometerState } from "./AccelerometerState";
-import { GyroscopeState } from "./GyroscopeState";
-import { SimulationState } from "./SimulationState";
-import { EnginesState } from "./EnginesState";
-import { DCSensorState } from "./DCSensorState";
-import { BatteryState } from "./BatteryState";
-import { StateProperty } from "../helpers/StateProperty";
+import { CommunicationState } from './CommunicationState';
+import { SteeringState } from './SteeringState';
+import { OrientationState } from './OrientationState';
+import { AccelerometerState } from './AccelerometerState';
+import { GyroscopeState } from './GyroscopeState';
+import { SimulationState } from './SimulationState';
+import { EnginesState } from './EnginesState';
+import { DCSensorState } from './DCSensorState';
+import { BatteryState } from './BatteryState';
+import { StateProperty } from '../helpers/StateProperty';
 
-interface DroneTargetStates {
-	engines: EnginesState,
-	steering: SteeringState,
-	//attitude: AttitudeTargetState,
-	//movement: MovementTargetState,
-	//position: PositionState	
+interface IDroneTargetStates {
+	engines: EnginesState;
+	steering: SteeringState;
+	// attitude: AttitudeTargetState,
+	// movement: MovementTargetState,
+	// position: PositionState
 }
 
-interface DroneCurrentStates {
-	//position: PositionState,
-	calibratedImu: StateProperty<Boolean>,
-	temperature: StateProperty<Number>,
-	orientation: OrientationState,
-	accelerometer: AccelerometerState,
-	gyroscope: GyroscopeState,
-	dcSensor: DCSensorState,
-	battery: BatteryState
-	//speed: (movement,orientation),
-	//proximity: (bottom,left,right,top)	
+interface IDroneCurrentStates {
+	// position: PositionState,
+	calibratedImu: StateProperty<boolean>;
+	temperature: StateProperty<number>;
+	orientation: OrientationState;
+	accelerometer: AccelerometerState;
+	gyroscope: GyroscopeState;
+	dcSensor: DCSensorState;
+	battery: BatteryState;
+	// speed: (movement,orientation),
+	// proximity: (bottom,left,right,top)
 }
 
 export class DroneState {
 	public communication: CommunicationState;
 	public simulation: SimulationState;
 
-	public target: DroneTargetStates;
-	public current: DroneCurrentStates;
+	public target: IDroneTargetStates;
+	public current: IDroneCurrentStates;
 
 	constructor() {
 		this.communication = new CommunicationState();

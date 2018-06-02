@@ -1,15 +1,11 @@
-import { DroneState } from "../../states/DroneState";
-import { DroneModule } from '../../interfaces/Module';
+import { DroneState } from '../../states/DroneState';
+import { IDroneModule } from '../../interfaces/Module';
 import Configuration from '../../services/ConfigurationService';
 
-export class Battery implements DroneModule {
+export class Battery implements IDroneModule {
 	public name: string = 'Battery';
 	private state: DroneState;
 	private disposers: Array<any> = [];
-
-	constructor () {
-
-	}
 
 	public setState(state: DroneState) {
 		this.state = state;
@@ -32,22 +28,22 @@ export class Battery implements DroneModule {
 	}
 
 	private getPercentage(currentVoltage: number) {
-		let totalRange = Configuration.battery.voltageMax - Configuration.battery.voltageMin;
-		let current = (currentVoltage - Configuration.battery.voltageMin);
+		const totalRange = Configuration.battery.voltageMax - Configuration.battery.voltageMin;
+		const current = (currentVoltage - Configuration.battery.voltageMin);
 		return current / totalRange;
 	}
 
 	private configureActions() {
-        this.disposers.push(this.state.current.dcSensor
-            .getStream()
-            .changes()
-            .onValue((dcSensorState) => {
-                this.state.current.battery.setValue({
+		this.disposers.push(this.state.current.dcSensor
+			.getStream()
+			.changes()
+			.onValue(dcSensorState => {
+				this.state.current.battery.setValue({
 					voltage: dcSensorState.voltage,
 					percentage: this.getPercentage(dcSensorState.voltage),
 					dischargeRate: 0,
 					autonomy: 0
 				});
-            }));
+			}));
 	}
 }

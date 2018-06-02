@@ -1,24 +1,31 @@
-import { StateProperty } from "../helpers/StateProperty";
+import { StateProperty } from '../helpers/StateProperty';
 
-interface EngineStateValue {
+export enum EnginePosiions {
+	frontLeft,
+	frontRight,
+	backLeft,
+	backRight
+}
+
+export interface IEngineStateValue {
 	throttle: number;
 }
 
-interface EnginesStateValue {
-	fl: EngineStateValue, // 4 CW
-	fr: EngineStateValue, // 3 CCW
-	bl: EngineStateValue, // 1 CCW
-	br: EngineStateValue // 2 CW
+export interface IEnginesGroupStateValue {
+	fl: IEngineStateValue; // 4 CW
+	fr: IEngineStateValue; // 3 CCW
+	bl: IEngineStateValue; // 1 CCW
+	br: IEngineStateValue; // 2 CW
 }
 
-export class EnginesState extends StateProperty<EnginesStateValue> {
-	constructor () {
+export class EnginesState extends StateProperty<IEnginesGroupStateValue> {
+	constructor() {
 		super({
 			fl: {
 				throttle: 0
 			},
 			fr: {
-				throttle: 0	
+				throttle: 0
 			},
 			bl: {
 				throttle: 0
