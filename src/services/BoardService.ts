@@ -1,69 +1,67 @@
-import { DroneConfiguration, BoardsIds } from '../interfaces/Configuration'
+import { IDroneConfiguration, BoardsIds } from '../interfaces/Configuration';
 
 class BoardService {
-	private static instance: BoardService = null;
-    private boards: Array<any> = [];
-    private initPromise: Promise<any> = null;
+	public static getBoard(boardId: BoardsIds): Promise<any> {
+		if (BoardService.instance === null) {
+			BoardService.instance = new BoardService();
+		}
 
-	private constructor () {
-
+		return BoardService.instance.initBoards()
+			.then(() => {
+				return BoardService.instance.boards[boardId];
+			});
 	}
 
-    private initBoards():Promise<any> {
-        if(this.initPromise === null) {
-            this.initPromise = new Promise<string>((resolve, reject) => {
-                let five: any = require("johnny-five"),
-                    Raspi_IO: any,
-                    arduino: any,
-                    raspberry: any;
+	public static getArduino(): Promise<any> {
+		return BoardService.getBoard(BoardsIds.arduino);
+	}
 
-                try {
-                    Raspi_IO = require("raspi-io");
-                } catch (er) {
-                    Raspi_IO = null;
-                    reject("Raspi-io not installed!");
-                }
+	public static getRaspberry(): Promise<any> {
+		return BoardService.getBoard(BoardsIds.raspberry);
+	}
 
-                let ports = [
-                    { id: "A", port: "/dev/ttyACM0" },
-                    { id: "rpi", io: new Raspi_IO() }
-                ];
+	private static instance: BoardService = null;
+	private boards: Array<any> = [];
+	private initPromise: Promise<any> = null;
 
-                console.log('Waiting for boards...');
+	private initBoards(): Promise<any> {
+		if (this.initPromise === null) {
+			this.initPromise = new Promise<string>((resolve, reject) => {
+				const five: any = require('johnny-five');
+				let raspiIO: any;
+				let arduino: any;
+				let raspberry: any;
 
-                let assignBoards = () => {
-                    this.boards[BoardsIds.arduino] = arduino;
-                    this.boards[BoardsIds.raspberry] = raspberry;
-                };
+				try {
+					raspiIO = require('raspi-io');
+				} catch (er) {
+					raspiIO = null;
+					reject('Raspi-io not installed!');
+				}
 
-                let allBoards = new five.Boards(ports).on("ready", function() {
-                    arduino = this[0];
-                    raspberry = this[1];
-                    assignBoards();
-                    resolve();
-                });
-            });
-        }
-        return this.initPromise;
-    }
+				const ports = [
+					{ id: 'A', port: '/dev/ttyACM0' },
+					{ id: 'rpi', io: new raspiIO() }
+				];
 
-    public static getBoard(boardId: BoardsIds):Promise<any> {
-        if(BoardService.instance === null)
-            BoardService.instance = new BoardService();
-        
-        return BoardService.instance.initBoards()
-            .then(() => {
-                return BoardService.instance.boards[boardId];
-            });
-    }
+				console.log('Waiting for boards...');
 
-    public static getArduino():Promise<any> {
-        return BoardService.getBoard(BoardsIds.arduino);
-    }
+				const assignBoards = () => {
+					this.boards[BoardsIds.arduino] = arduino;
+					this.boards[BoardsIds.raspberry] = raspberry;
+				};
 
-    public static getRaspberry():Promise<any> {
-        return BoardService.getBoard(BoardsIds.raspberry);
-    }
+				const allBoards = new five.Boards(ports).on('ready', function() {
+					arduino = this[0];
+					raspberry = this[1];
+					assignBoards();
+					resolve();
+				});
+			});
+		}
+		return this.initPromise;
+	}
+
 }
 
 export default BoardService;

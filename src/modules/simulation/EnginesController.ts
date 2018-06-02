@@ -1,14 +1,10 @@
-import { DroneState } from "../../states/DroneState";
-import { DroneModule } from "../../interfaces/Module";
+import { DroneState } from '../../states/DroneState';
+import { IDroneModule } from '../../interfaces/Module';
 
-export class EnginesController implements DroneModule {
+export class EnginesController implements IDroneModule {
 	public name: string = 'Engines Controller';
 	private state: DroneState;
 	private disposers: Array<any> = [];
-
-	constructor () {
-
-	}
 
 	public setState(state: DroneState) {
 		this.state = state;
@@ -31,11 +27,11 @@ export class EnginesController implements DroneModule {
 	}
 
 	private configureActions() {
-        this.disposers.push(this.state.target.engines
-            .getStream()
-            .changes()
-            .onValue((enginesState) => {
-                // nothing to do here, all is calculated on the simulation loop.
-            }));
+		this.disposers.push(this.state.target.engines
+			.getStream()
+			.changes()
+			.onValue(enginesState => {
+				// nothing to do here, all is calculated on the simulation loop.
+			}));
 	}
 }

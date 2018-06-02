@@ -1,20 +1,14 @@
-/// <reference path="../../../typings/globals/baconjs/index.d.ts" />
-let Bacon = require('baconjs');
+import * as Bacon from 'baconjs';
+import { Utils } from '../../helpers/Utils';
+import { DirectConnection } from '../../helpers/DirectConnection';
+import { DroneState } from '../../states/DroneState';
+import { IDroneModule } from '../../interfaces/Module';
 
-import { Utils } from "../../helpers/Utils";
-import { DirectConnection } from "../../helpers/DirectConnection";
-import { DroneState } from "../../states/DroneState";
-import { DroneModule } from '../../interfaces/Module'
-
-export class Communication implements DroneModule {
+export class Communication implements IDroneModule {
 	public name: string = 'Communication';
 	private state: DroneState;
 	private connection: DirectConnection;
 	private disposers: Array<any> = [];
-
-	constructor () {
-
-	}
 
 	public setState(state: DroneState) {
 		this.state = state;
@@ -39,13 +33,13 @@ export class Communication implements DroneModule {
 		});
 	}
 
-	private initConnection(cb: Function) {
+	private initConnection(cb: () => void) {
 		this.connection = new DirectConnection({
 			events: {
 				messageReceived: (message: any) => {
 					this.handleMessageReceived(message);
 				},
-				readyToSend: (ready:boolean) => {
+				readyToSend: (ready: boolean) => {
 					this.state.communication.connected.setValue(ready);
 				},
 				started: () => {
@@ -57,7 +51,7 @@ export class Communication implements DroneModule {
 	}
 
 	private configureStreaming() {
-		let commData = Bacon.combineTemplate({
+		const commData = Bacon.combineTemplate({
 			simulation: {
 				position: this.state.simulation.position.getStream(),
 				orientation: this.state.simulation.orientation.getStream()
@@ -72,17 +66,17 @@ export class Communication implements DroneModule {
 			.changes()
 			.skipDuplicates()
 			.skipWhile(this.state.communication.connected.getStream().map(Utils.negate))
-			.onValue((state:any) => {
+			.onValue((state: any) => {
 				this.connection.sendDataUsingFastChannel(state);
 			}));
 	}
 
 	private handleMessageReceived(data: any) {
 		try {
-			if(data.joystick !== undefined) {
+			if (data.joystick !== undefined) {
 				this.state.target.steering.setValue(data.joystick);
 			}
-		} catch(e) {
+		} catch (e) {
 			console.log('Error! Failed to parse message from client');
 		}
 	}
