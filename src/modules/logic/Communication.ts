@@ -3,6 +3,7 @@ import { Utils } from '../../helpers/Utils';
 import { DirectConnection } from '../../helpers/DirectConnection';
 import { DroneState } from '../../states/DroneState';
 import { IDroneModule } from '../../interfaces/Module';
+import DronePosition from 'ual-ter-protocol';
 
 export class Communication implements IDroneModule {
 	public name: string = 'Communication';
@@ -51,6 +52,8 @@ export class Communication implements IDroneModule {
 	}
 
 	private configureStreaming() {
+		const data: DronePosition = new DronePosition();
+		console.log('Protocol Library Test', data.position);
 		const commData = Bacon.combineTemplate({
 			simulation: {
 				position: this.state.simulation.position.getStream(),
