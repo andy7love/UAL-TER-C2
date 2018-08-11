@@ -1,6 +1,5 @@
 import { DroneState } from '../../states/DroneState';
 import { IDroneModule } from '../../interfaces/Module';
-import { Utils } from '../../helpers/Utils';
 import BoardService from '../../services/BoardService';
 import Configuration from '../../services/ConfigurationService';
 import * as CANNON from 'cannon';

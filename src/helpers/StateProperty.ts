@@ -1,6 +1,6 @@
 import * as Bacon from 'baconjs';
 
-interface IStateError {
+export interface IStateError {
 	error: string;
 }
 

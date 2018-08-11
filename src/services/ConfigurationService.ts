@@ -1,4 +1,4 @@
-import { Utils } from '../helpers/Utils';
+import { Utils } from 'ual-ter-protocol';
 import { IDroneConfiguration } from '../interfaces/Configuration';
 
 class ConfigurationService {
