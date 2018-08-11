@@ -6,8 +6,9 @@
   "scripts": {
     "start": "node build/index",
     "check": "node build/index check",
-    "dev": "npm run lint && gulp && node build/index",
-    "dev-check": "gulp && node build/index check",
+    "build": "gulp",
+    "link-local-lib": "rimraf node_modules/ual-ter-protocol && npm link ual-ter-protocol",
+    "dev": "npm run link-local-lib && npm run lint && npm run build && npm start",
     "lint": "tslint -p tslint.json",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -43,6 +44,7 @@
     "socket.io-client": "^1.5.1",
     "tslint": "^5.10.0",
     "typescript": "^2.8.3",
+    "ual-ter-protocol": "git+https://github.com/andy7love/UAL-TER-Protocol.git",
     "underscore": "^1.8.3"
   },
   "optionalDependencies": {
@@ -55,6 +57,7 @@
     "@types/johnny-five": "0.0.36",
     "@types/node": "^8.0.53",
     "@types/socket.io-client": "^1.4.32",
-    "@types/underscore": "^1.8.8"
+    "@types/underscore": "^1.8.8",
+    "rimraf": "^2.6.2"
   }
 }

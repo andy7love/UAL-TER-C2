@@ -1,5 +1,4 @@
 import { ModulesManager } from '../managers/ModulesManager';
-import { DroneState } from '../states/DroneState';
 
 export class ModulesManagerBuilder {
 	public static BuildHardwareModules(moduleMgr: ModulesManager) {

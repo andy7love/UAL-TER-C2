@@ -1,13 +1,7 @@
 import { StateProperty } from '../helpers/StateProperty';
+import { IBatteryState } from 'ual-ter-protocol';
 
-interface IBatteryStateValue {
-	voltage: number;
-	percentage: number;
-	dischargeRate: number;
-	autonomy: number;
-}
-
-export class BatteryState extends StateProperty<IBatteryStateValue> {
+export class BatteryState extends StateProperty<IBatteryState> {
 	constructor() {
 		super({
 			voltage: 0,
